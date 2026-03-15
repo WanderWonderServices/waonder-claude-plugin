@@ -1,0 +1,15 @@
+{
+  "name": "waonder-plugins",
+  "owner": {
+    "name": "Waonder Services",
+    "email": "dev@waonder.com"
+  },
+  "plugins": [
+    {
+      "name": "waonder-claude-plugin",
+      "source": "./",
+      "description": "Claude Code plugin for Waonder apps — skills, agents, and hooks for mobile, backend, and infrastructure development",
+      "version": "1.0.0"
+    }
+  ]
+}
