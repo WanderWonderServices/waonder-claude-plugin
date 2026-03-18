@@ -19,7 +19,7 @@ When the user has generated landmark images and needs to prepare them for the ap
 Use this prompt with an image-editing-capable AI:
 
 ```
-Take the @[IMAGE_NAME] and convert it to a PNG with a transparent background by removing the white color. Trim the image to its content and add consistent padding around it.
+Take the @[IMAGE_NAME] and convert it to a PNG with a transparent background by removing the white color. Trim the image to its content, resize it to a square (use the larger dimension), scale it down to 256x256 maximum, and add consistent padding around it.
 ```
 
 ### Option B: Command Line (ImageMagick)
@@ -30,6 +30,10 @@ magick INPUT.png \
   -fuzz 5% \
   -transparent white \
   -trim \
+  -gravity center \
+  -background none \
+  -extent "%[fx:max(w,h)]x%[fx:max(w,h)]" \
+  -resize 256x256 \
   -bordercolor none -border 15x15 \
   OUTPUT_transparent.png
 ```
@@ -37,7 +41,7 @@ magick INPUT.png \
 **Batch processing (all PNGs in current directory):**
 ```bash
 for img in *.png; do
-  magick "$img" -fuzz 5% -transparent white -trim -bordercolor none -border 15x15 "${img%.png}_transparent.png"
+  magick "$img" -fuzz 5% -transparent white -trim -gravity center -background none -extent "%[fx:max(w,h)]x%[fx:max(w,h)]" -resize 256x256 -bordercolor none -border 15x15 "${img%.png}_transparent.png"
 done
 ```
 
@@ -49,6 +53,7 @@ done
 | `-border 15x15` | Padding in pixels around trimmed content | `10x10`–`20x20` |
 
 ## Constraints
+- Output images must be square and no larger than 256x256 pixels (before padding) — these are used as map icons
 - The CLI approach requires ImageMagick to be installed
 - Fuzz tolerance may need adjusting per image — start at `5%` and increase only if white remains
 - Output files should use the `_transparent.png` suffix to distinguish from originals
