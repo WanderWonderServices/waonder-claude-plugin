@@ -127,29 +127,38 @@ with open('$IP_FILE', 'w') as f:
 "
 echo "[OK] Updated $IP_FILE"
 
-# ── 4. Create cache symlink (the critical step) ─────────────────────
+# ── 4. Build cache with symlinked skills/ and agents/ ────────────────
+#
+# Claude Code replaces version-level symlinks with directory copies at
+# session startup.  To work around this, we create a real version
+# directory but symlink the skills/ and agents/ subdirectories back to
+# the source repo.  This way, any new skill or agent added to the repo
+# is picked up on the next session restart without re-running setup.
+#
 CACHE_DIR="$HOME/.claude/plugins/cache/$MARKETPLACE_NAME/$PLUGIN_NAME"
 CACHE_VERSION_DIR="$CACHE_DIR/$VERSION"
 
-mkdir -p "$CACHE_DIR"
-
-if [ -L "$CACHE_VERSION_DIR" ]; then
-  CURRENT_TARGET=$(readlink "$CACHE_VERSION_DIR")
-  if [ "$CURRENT_TARGET" = "$PLUGIN_DIR" ]; then
-    echo "[OK] Cache symlink already correct: $CACHE_VERSION_DIR -> $PLUGIN_DIR"
-  else
-    rm "$CACHE_VERSION_DIR"
-    ln -s "$PLUGIN_DIR" "$CACHE_VERSION_DIR"
-    echo "[OK] Updated cache symlink: $CACHE_VERSION_DIR -> $PLUGIN_DIR"
-  fi
-elif [ -d "$CACHE_VERSION_DIR" ]; then
+# Remove stale cache (whether it's a symlink or a directory)
+if [ -L "$CACHE_VERSION_DIR" ] || [ -d "$CACHE_VERSION_DIR" ]; then
   rm -rf "$CACHE_VERSION_DIR"
-  ln -s "$PLUGIN_DIR" "$CACHE_VERSION_DIR"
-  echo "[OK] Replaced cache directory with symlink: $CACHE_VERSION_DIR -> $PLUGIN_DIR"
-else
-  ln -s "$PLUGIN_DIR" "$CACHE_VERSION_DIR"
-  echo "[OK] Created cache symlink: $CACHE_VERSION_DIR -> $PLUGIN_DIR"
 fi
+
+mkdir -p "$CACHE_VERSION_DIR"
+
+# Copy top-level files that Claude Code expects
+for item in .claude-plugin hooks scripts CLAUDE.md LICENSE README.md .gitignore; do
+  if [ -e "$PLUGIN_DIR/$item" ]; then
+    cp -R "$PLUGIN_DIR/$item" "$CACHE_VERSION_DIR/$item"
+  fi
+done
+
+# Symlink the directories that contain discoverable content
+ln -s "$PLUGIN_DIR/skills" "$CACHE_VERSION_DIR/skills"
+ln -s "$PLUGIN_DIR/agents" "$CACHE_VERSION_DIR/agents"
+
+echo "[OK] Built cache at $CACHE_VERSION_DIR"
+echo "     skills/ -> $PLUGIN_DIR/skills (symlink)"
+echo "     agents/ -> $PLUGIN_DIR/agents (symlink)"
 
 # ── 5. Verify ────────────────────────────────────────────────────────
 echo ""
