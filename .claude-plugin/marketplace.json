@@ -6,12 +6,6 @@
   },
   "plugins": [
     {
-      "name": "waonder-claude-plugin",
-      "source": "./",
-      "description": "Claude Code plugin for Waonder apps — skills, agents, and hooks for mobile, backend, and infrastructure development",
-      "version": "1.0.0"
-    },
-    {
       "name": "android-to-ios-claude-plugin",
       "source": "./plugins/android-to-ios-claude-plugin",
       "description": "Claude Code plugin for Android to iOS migration — comprehensive skills and agents covering UI, architecture, data, concurrency, testing, and platform APIs",
