@@ -1,0 +1,11 @@
+{
+  "name": "android-to-ios-claude-plugin",
+  "description": "Claude Code plugin for Android to iOS migration — comprehensive skills and agents covering UI, architecture, data, concurrency, testing, and platform APIs",
+  "version": "1.0.0",
+  "author": {
+    "name": "Waonder Services",
+    "email": "dev@waonder.com"
+  },
+  "keywords": ["claude-code", "skills", "agents", "android", "ios", "migration", "mobile"],
+  "license": "MIT"
+}

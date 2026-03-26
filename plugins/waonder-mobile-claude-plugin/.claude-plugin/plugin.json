@@ -1,0 +1,11 @@
+{
+  "name": "waonder-mobile-claude-plugin",
+  "description": "Claude Code plugin for Waonder mobile applications — skills and agents for landmarks, modules, app info, and project management",
+  "version": "1.0.0",
+  "author": {
+    "name": "Waonder Services",
+    "email": "dev@waonder.com"
+  },
+  "keywords": ["claude-code", "skills", "agents", "waonder", "mobile", "android", "ios"],
+  "license": "MIT"
+}
