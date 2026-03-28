@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-accessibility
-description: Guides migration of Android accessibility (contentDescription, AccessibilityNodeInfo, custom actions, live regions, TalkBack, AccessibilityService) to iOS equivalents (accessibilityLabel/Hint/Traits/Value, VoiceOver, accessibilityElement, Dynamic Type, reduce motion) with semantic equivalents, screen reader testing, and custom actions
+description: Use when migrating Android accessibility (contentDescription, AccessibilityNodeInfo, custom actions, live regions, TalkBack, AccessibilityService) to iOS equivalents (accessibilityLabel/Hint/Traits/Value, VoiceOver, accessibilityElement, Dynamic Type, reduce motion) with semantic equivalents, screen reader testing, and custom actions
 type: generic
 ---
 

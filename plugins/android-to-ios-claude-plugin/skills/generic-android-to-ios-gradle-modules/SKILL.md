@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-gradle-modules
-description: Guides migration of Android Gradle multi-module architecture (feature modules, core modules, convention plugins, composite builds) to iOS equivalents (SPM packages/targets, Xcode frameworks, Tuist project generation) with modular dependency graphs, build performance, and shared code strategies
+description: Use when migrating Android Gradle multi-module architecture (feature modules, core modules, convention plugins, composite builds) to iOS equivalents (SPM packages/targets, Xcode frameworks, Tuist project generation) with modular dependency graphs, build performance, and shared code strategies
 type: generic
 ---
 
@@ -511,6 +511,10 @@ final class HomeViewModel {
 6. **Test target isolation** — In Android, `testImplementation` dependencies are not visible to production code. In SPM, `testTarget` dependencies are similarly isolated. However, to test internal types in Swift you need `@testable import ModuleName`, which only works if the module is compiled with testing enabled (default in debug).
 
 7. **No convention plugin equivalent in SPM** — Android convention plugins centralize `compileSdk`, `minSdk`, and common dependencies. SPM has no built-in equivalent. Use a shared `Package.swift` helper or Tuist's `ProjectDescription.Helpers` for this pattern.
+
+8. **Type name collisions across SPM targets** — In Kotlin, types are disambiguated by full package path. In Swift, SPM modules have flat namespaces — if two modules export the same type name, the compiler raises an ambiguity error. Fix with module-qualified names: `CoreDomain.LatLng`. When migrating, audit type names across modules and either rename to be unique or use `typealias`.
+
+9. **Public default argument values** — If a `public` function has a default argument referencing a type or static member, that type/member must also be `public`. Not required in Kotlin.
 
 ## Migration Checklist
 

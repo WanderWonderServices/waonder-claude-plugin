@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-usecase
-description: Guides migration of Android Use Case / Interactor patterns (operator() convention, coroutine-based, single-responsibility) to iOS equivalents (Swift protocols, async/await, Combine pipelines) with composability and testability strategies
+description: Use when migrating Android Use Case / Interactor patterns (operator() convention, coroutine-based, single-responsibility) to iOS equivalents (Swift protocols, async/await, Combine pipelines) with composability and testability strategies
 type: generic
 ---
 

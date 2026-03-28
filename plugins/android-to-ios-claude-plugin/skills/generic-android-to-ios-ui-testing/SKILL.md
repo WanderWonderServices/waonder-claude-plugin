@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-ui-testing
-description: Guides migration of Android UI testing patterns (Espresso with onView, ViewMatchers, ViewActions, ViewAssertions, IdlingResource) to iOS equivalents (XCUITest with XCUIApplication, XCUIElement, queries, actions, expectations, waitForExistence), covering element finding, actions, assertions, synchronization, test recording, and accessibility-based testing
+description: Use when migrating Android UI testing patterns (Espresso with onView, ViewMatchers, ViewActions, ViewAssertions, IdlingResource) to iOS equivalents (XCUITest with XCUIApplication, XCUIElement, queries, actions, expectations, waitForExistence), covering element finding, actions, assertions, synchronization, test recording, and accessibility-based testing
 type: generic
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-version-catalogs
-description: Guides migration of Android Version Catalogs (libs.versions.toml), BOMs, and dependency constraints to iOS equivalents (Package.swift version requirements, CocoaPods Podfile, Tuist Dependencies.swift) with centralized version management, dependency locking, resolution strategies, and update workflows
+description: Use when migrating Android Version Catalogs (libs.versions.toml), BOMs, and dependency constraints to iOS equivalents (Package.swift version requirements, CocoaPods Podfile, Tuist Dependencies.swift) with centralized version management, dependency locking, resolution strategies, and update workflows
 type: generic
 ---
 

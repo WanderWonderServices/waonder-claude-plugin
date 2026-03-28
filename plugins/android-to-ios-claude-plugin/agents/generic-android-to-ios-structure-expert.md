@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-structure-expert
-description: Designs and enforces 1:1 folder structure and module parity between Android and iOS codebases — every module, package, folder, and file must have a mirrored counterpart
+description: Use when designing, auditing, or enforcing 1:1 folder structure and module parity between Android and iOS codebases — ensuring every module, package, folder, and file has a mirrored counterpart
 ---
 
 # Android-to-iOS Structure Expert

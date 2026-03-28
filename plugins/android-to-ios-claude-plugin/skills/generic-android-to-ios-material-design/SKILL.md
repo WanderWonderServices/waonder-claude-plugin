@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-material-design
-description: Migrates Android Material Design 3 theming (MaterialTheme, dynamic color, typography, shapes, components) to iOS Human Interface Guidelines equivalents (native components, SF Symbols, system colors, dynamic type)
+description: Use when migrating Android Material Design 3 theming (MaterialTheme, dynamic color, typography, shapes, components) to iOS Human Interface Guidelines equivalents (native components, SF Symbols, system colors, dynamic type)
 type: generic
 ---
 

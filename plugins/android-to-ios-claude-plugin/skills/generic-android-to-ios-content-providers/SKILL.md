@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-content-providers
-description: Migrate Android ContentProvider patterns (CRUD via URI, ContentResolver, FileProvider) to iOS App Groups, UIActivityViewController, FileProvider extensions, and share extensions
+description: Use when migrating Android ContentProvider patterns (CRUD via URI, ContentResolver, FileProvider) to iOS App Groups, UIActivityViewController, FileProvider extensions, and share extensions
 type: generic
 ---
 

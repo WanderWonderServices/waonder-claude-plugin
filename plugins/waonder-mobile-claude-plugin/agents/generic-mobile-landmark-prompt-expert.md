@@ -1,6 +1,6 @@
 ---
 name: generic-mobile-landmark-prompt-expert
-description: Expert on generating whimsical storybook landmark prompts for AI image generation tools — use when creating, refining, or evaluating landmark icons for the Waonder map
+description: Use when creating, refining, or evaluating whimsical storybook landmark prompts for AI image generation tools, including landmark icon design for map applications.
 ---
 
 # generic-mobile-landmark-prompt-expert

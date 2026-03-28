@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-activities
-description: Migrate Android Activity patterns (single-activity architecture, startActivity, Intent, result APIs, task/back stack) to iOS UIViewController, SwiftUI App+Scene, and presentation patterns
+description: Use when migrating Android Activity patterns (single-activity architecture, startActivity, Intent, result APIs, task/back stack) to iOS UIViewController, SwiftUI App+Scene, and presentation patterns
 type: generic
 ---
 

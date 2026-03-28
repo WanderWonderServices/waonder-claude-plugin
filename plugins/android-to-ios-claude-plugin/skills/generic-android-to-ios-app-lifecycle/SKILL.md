@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-app-lifecycle
-description: Guides migration of Android Application class lifecycle (custom Application subclass, onCreate initialization, Startup library) to iOS equivalents (@main App struct, UIApplicationDelegate, SceneDelegate, app initialization order), covering dependency setup, multi-window support, and scene-based lifecycle
+description: Use when migrating Android Application class lifecycle (custom Application subclass, onCreate initialization, Startup library) to iOS equivalents (@main App struct, UIApplicationDelegate, SceneDelegate, app initialization order), covering dependency setup, multi-window support, and scene-based lifecycle
 type: generic
 ---
 

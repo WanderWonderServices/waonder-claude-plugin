@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-fragments
-description: Migrate Android Fragment patterns (FragmentManager, FragmentTransaction, ViewPager2, BottomSheetDialogFragment) to iOS child UIViewController, SwiftUI subviews, TabView, .sheet/.fullScreenCover
+description: Use when migrating Android Fragment patterns (FragmentManager, FragmentTransaction, ViewPager2, BottomSheetDialogFragment) to iOS child UIViewController, SwiftUI subviews, TabView, .sheet/.fullScreenCover
 type: generic
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-image-loading
-description: Guides migration of Android image loading libraries (Coil, Glide) with Compose/View integration, caching, transformations, and placeholder/error states to iOS equivalents (Kingfisher, Nuke, AsyncImage, SDWebImage) with SwiftUI integration, caching strategies, and image processing pipelines
+description: Use when migrating Android image loading libraries (Coil, Glide) with Compose/View integration, caching, transformations, and placeholder/error states to iOS equivalents (Kingfisher, Nuke, AsyncImage, SDWebImage) with SwiftUI integration, caching strategies, and image processing pipelines
 type: generic
 ---
 

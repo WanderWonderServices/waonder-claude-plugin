@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-camera
-description: Guides migration of Android CameraX (CameraProvider, Preview, ImageCapture, ImageAnalysis, VideoCapture use cases) to iOS AVFoundation Camera (AVCaptureSession, AVCaptureDevice, AVCapturePhotoOutput, AVCaptureVideoDataOutput) with camera setup, preview rendering, photo capture, video recording, barcode scanning, face detection, and permissions
+description: Use when migrating Android CameraX (CameraProvider, Preview, ImageCapture, ImageAnalysis, VideoCapture use cases) to iOS AVFoundation Camera (AVCaptureSession, AVCaptureDevice, AVCapturePhotoOutput, AVCaptureVideoDataOutput) with camera setup, preview rendering, photo capture, video recording, barcode scanning, face detection, and permissions
 type: generic
 ---
 

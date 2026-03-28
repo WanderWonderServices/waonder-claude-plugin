@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-deep-links
-description: Migrate Android deep links (intent filters, App Links, Navigation deep links, Firebase Dynamic Links) to iOS Universal Links, URL Schemes, SwiftUI .onOpenURL, and Firebase Dynamic Links
+description: Use when migrating Android deep links (intent filters, App Links, Navigation deep links, Firebase Dynamic Links) to iOS Universal Links, URL Schemes, SwiftUI .onOpenURL, and Firebase Dynamic Links
 type: generic
 ---
 

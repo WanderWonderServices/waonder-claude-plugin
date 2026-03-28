@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-location
-description: Guides migration of Android location patterns (FusedLocationProviderClient, Geofencing API, location permissions) to iOS Core Location equivalents (CLLocationManager, CLLocation, CLCircularRegion, authorization levels) covering permission tiers, background location, geofencing, accuracy levels, and battery optimization
+description: Use when migrating Android location patterns (FusedLocationProviderClient, Geofencing API, location permissions) to iOS Core Location equivalents (CLLocationManager, CLLocation, CLCircularRegion, authorization levels) covering permission tiers, background location, geofencing, accuracy levels, and battery optimization
 type: generic
 ---
 

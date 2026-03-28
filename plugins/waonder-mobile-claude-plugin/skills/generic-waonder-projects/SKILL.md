@@ -1,6 +1,6 @@
 ---
 name: generic-waonder-projects
-description: Quick reference of all Waonder repositories — use when building, debugging, or discussing any Waonder project to understand the ecosystem, tech stack, and repo boundaries
+description: Use when building, debugging, or discussing any Waonder project — provides a quick reference of all Waonder repositories to understand the ecosystem, tech stack, and repo boundaries
 type: generic
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-remote-datasource
-description: Migrate Android remote data source pattern (interface + Retrofit implementation, DTOs, mappers) to iOS remote data source pattern (protocol + URLSession/Alamofire implementation, Codable, mappers)
+description: Use when migrating Android remote data source pattern (interface + Retrofit implementation, DTOs, mappers) to iOS remote data source pattern (protocol + URLSession/Alamofire implementation, Codable, mappers)
 type: generic
 ---
 

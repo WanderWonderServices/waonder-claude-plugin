@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-app-shortcuts
-description: Guides migration of Android app shortcut patterns (ShortcutManager with static/dynamic/pinned shortcuts, shortcut intents, ranking) to iOS equivalents (Quick Actions via UIApplicationShortcutItem, App Intents framework, Spotlight via CSSearchableItem, Siri Shortcuts) covering home screen shortcuts, voice-triggered actions, search integration, and intent-based actions
+description: Use when migrating Android app shortcut patterns (ShortcutManager with static/dynamic/pinned shortcuts, shortcut intents, ranking) to iOS equivalents (Quick Actions via UIApplicationShortcutItem, App Intents framework, Spotlight via CSSearchableItem, Siri Shortcuts) covering home screen shortcuts, voice-triggered actions, search integration, and intent-based actions
 type: generic
 ---
 

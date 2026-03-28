@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-security
-description: Guides migration of Android security (AndroidKeyStore, EncryptedSharedPreferences, BiometricPrompt, SafetyNet/Play Integrity, certificate pinning) to iOS equivalents (Keychain Services, CryptoKit, LAContext biometrics, App Attest/DeviceCheck, ATS, certificate pinning) with credential storage, encryption, biometric auth, device attestation, and network security
+description: Use when migrating Android security (AndroidKeyStore, EncryptedSharedPreferences, BiometricPrompt, SafetyNet/Play Integrity, certificate pinning) to iOS equivalents (Keychain Services, CryptoKit, LAContext biometrics, App Attest/DeviceCheck, ATS, certificate pinning) with credential storage, encryption, biometric auth, device attestation, and network security
 type: generic
 ---
 

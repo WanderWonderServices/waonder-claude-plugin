@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-migration-expert
-description: Master agent for full Android-to-iOS app migration strategy, architecture decisions, and cross-cutting concerns
+description: Use when planning or coordinating a full Android-to-iOS app migration, making architecture decisions, or handling cross-cutting concerns that span multiple domains
 ---
 
 # Android-to-iOS Migration Expert

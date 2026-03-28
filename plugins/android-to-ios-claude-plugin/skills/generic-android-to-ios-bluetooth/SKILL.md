@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-bluetooth
-description: Guides migration of Android Bluetooth/BLE patterns (BluetoothAdapter, BluetoothLeScanner, BluetoothGatt, central/peripheral roles) to iOS Core Bluetooth equivalents (CBCentralManager, CBPeripheralManager, CBPeripheral, CBUUID, delegate-based API) with scanning, GATT operations, permissions, background BLE, and state restoration
+description: Use when migrating Android Bluetooth/BLE patterns (BluetoothAdapter, BluetoothLeScanner, BluetoothGatt, central/peripheral roles) to iOS Core Bluetooth equivalents (CBCentralManager, CBPeripheralManager, CBPeripheral, CBUUID, delegate-based API) with scanning, GATT operations, permissions, background BLE, and state restoration
 type: generic
 ---
 

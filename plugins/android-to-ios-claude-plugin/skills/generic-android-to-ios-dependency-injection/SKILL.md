@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-dependency-injection
-description: Migrates Android dependency injection patterns (Hilt, Dagger, Koin) to iOS equivalents (protocol-based injection, Swinject, swift-dependencies, @Environment)
+description: Use when migrating Android dependency injection patterns (Hilt, Dagger, Koin) to iOS equivalents (protocol-based injection, Swinject, swift-dependencies, @Environment)
 type: generic
 ---
 

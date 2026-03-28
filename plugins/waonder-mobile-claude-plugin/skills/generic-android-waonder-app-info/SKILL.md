@@ -1,6 +1,6 @@
 ---
 name: generic-android-waonder-app-info
-description: Quick reference for the Waonder Android application — local path, GitHub repo, tech stack, and project structure for migration and development tasks
+description: Use when working on or referencing the Waonder Android application — provides local path, GitHub repo, tech stack, and project structure for migration and development tasks
 type: generic
 ---
 

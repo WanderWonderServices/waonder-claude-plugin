@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-views
-description: Migrates Android XML-based Views (ViewBinding, DataBinding, ConstraintLayout, RecyclerView) to iOS UIKit equivalents (Storyboards, XIBs, programmatic layout, Auto Layout, UICollectionView, UITableView)
+description: Use when migrating Android XML-based Views (ViewBinding, DataBinding, ConstraintLayout, RecyclerView) to iOS UIKit equivalents (Storyboards, XIBs, programmatic layout, Auto Layout, UICollectionView, UITableView)
 type: generic
 ---
 

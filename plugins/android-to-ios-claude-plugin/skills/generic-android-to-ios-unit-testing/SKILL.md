@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-unit-testing
-description: Guides migration of Android unit testing patterns (JUnit 4/5, @Test, @Before/@After, assertions, parameterized tests, test rules) to iOS equivalents (XCTest with XCTestCase, setUp/tearDown, XCTAssert*) and Swift Testing (@Test, #expect, @Suite, Xcode 16+), covering test structure, assertion mapping, async testing, fixtures, parameterized tests, and test filtering
+description: Use when migrating Android unit testing patterns (JUnit 4/5, @Test, @Before/@After, assertions, parameterized tests, test rules) to iOS equivalents (XCTest with XCTestCase, setUp/tearDown, XCTAssert*) and Swift Testing (@Test, #expect, @Suite, Xcode 16+), covering test structure, assertion mapping, async testing, fixtures, parameterized tests, and test filtering
 type: generic
 ---
 

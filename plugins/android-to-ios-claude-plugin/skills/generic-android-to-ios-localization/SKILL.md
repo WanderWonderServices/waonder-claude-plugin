@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-localization
-description: Guides migration of Android localization (strings.xml, values-es/, plurals, string arrays, format args, translation management) to iOS equivalents (String Catalogs .xcstrings Xcode 15+, Localizable.strings legacy, String(localized:), plurals, device variations) with file format mapping, plural handling, format arguments, RTL support, and testing
+description: Use when migrating Android localization (strings.xml, values-es/, plurals, string arrays, format args, translation management) to iOS equivalents (String Catalogs .xcstrings Xcode 15+, Localizable.strings legacy, String(localized:), plurals, device variations) with file format mapping, plural handling, format arguments, RTL support, and testing
 type: generic
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-repository
-description: Guides migration of Android Repository patterns (single source of truth, Flow-based APIs, local+remote coordination) to iOS equivalents (Swift protocols, async/await, AsyncSequence) with offline-first, caching, error handling, and testing strategies
+description: Use when migrating Android Repository patterns (single source of truth, Flow-based APIs, local+remote coordination) to iOS equivalents (Swift protocols, async/await, AsyncSequence) with offline-first, caching, error handling, and testing strategies
 type: generic
 ---
 

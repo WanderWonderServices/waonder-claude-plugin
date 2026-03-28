@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-concurrency-expert
-description: Expert on migrating Kotlin Coroutines and Flows to Swift Concurrency and AsyncSequence
+description: Use when migrating Kotlin Coroutines and Flows to Swift Concurrency and AsyncSequence, or resolving async/threading issues during an Android-to-iOS port
 ---
 
 # Android-to-iOS Concurrency Expert

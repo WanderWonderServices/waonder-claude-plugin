@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-coroutines
-description: Migrates Kotlin Coroutines patterns (suspend, launch, async, Dispatchers, structured concurrency) to Swift Concurrency equivalents (async/await, Task, TaskGroup, actors, MainActor)
+description: Use when migrating Kotlin Coroutines patterns (suspend, launch, async, Dispatchers, structured concurrency) to Swift Concurrency equivalents (async/await, Task, TaskGroup, actors, MainActor)
 type: generic
 ---
 

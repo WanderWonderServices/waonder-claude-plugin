@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-nfc
-description: Guides migration of Android NFC patterns (NfcAdapter, NDEF, NdefMessage, Tag dispatch, Host Card Emulation, foreground dispatch) to iOS Core NFC equivalents (NFCNDEFReaderSession, NFCTagReaderSession) covering NDEF reading/writing, tag types, iOS limitations vs Android capabilities, and background tag reading
+description: Use when migrating Android NFC patterns (NfcAdapter, NDEF, NdefMessage, Tag dispatch, Host Card Emulation, foreground dispatch) to iOS Core NFC equivalents (NFCNDEFReaderSession, NFCTagReaderSession) covering NDEF reading/writing, tag types, iOS limitations vs Android capabilities, and background tag reading
 type: generic
 ---
 

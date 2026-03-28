@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-manifest
-description: Guides migration of Android AndroidManifest.xml (activities, services, receivers, permissions, intent-filters, meta-data, application attributes) to iOS Info.plist (app metadata, URL schemes, background modes, usage descriptions), Entitlements (capabilities), and PrivacyInfo.xcprivacy (API usage declarations required since 2024)
+description: Use when migrating Android AndroidManifest.xml (activities, services, receivers, permissions, intent-filters, meta-data, application attributes) to iOS Info.plist (app metadata, URL schemes, background modes, usage descriptions), Entitlements (capabilities), and PrivacyInfo.xcprivacy (API usage declarations required since 2024)
 type: generic
 ---
 

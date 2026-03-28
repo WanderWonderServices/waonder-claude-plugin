@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-workmanager
-description: Guides migration of Android WorkManager (OneTimeWorkRequest, PeriodicWorkRequest, constraints, chaining, expedited work, CoroutineWorker) to iOS equivalents (BGTaskScheduler, BGAppRefreshTask, BGProcessingTask, Background URLSession) with scheduling strategies, constraint equivalents, and background work limitations
+description: Use when migrating Android WorkManager (OneTimeWorkRequest, PeriodicWorkRequest, constraints, chaining, expedited work, CoroutineWorker) to iOS equivalents (BGTaskScheduler, BGAppRefreshTask, BGProcessingTask, Background URLSession) with scheduling strategies, constraint equivalents, and background work limitations
 type: generic
 ---
 

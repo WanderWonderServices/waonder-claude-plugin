@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-datastore
-description: Migrate Android DataStore (Preferences and Proto) to iOS UserDefaults, @AppStorage, and NSUbiquitousKeyValueStore for key-value and typed preference storage
+description: Use when migrating Android DataStore (Preferences and Proto) to iOS UserDefaults, @AppStorage, and NSUbiquitousKeyValueStore for key-value and typed preference storage
 type: generic
 ---
 

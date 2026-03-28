@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-widgets
-description: Guides migration of Android widget patterns (AppWidgetProvider, Glance Compose widgets, RemoteViews, widget configuration, update strategies) to iOS WidgetKit equivalents (Widget protocol, TimelineProvider, TimelineEntry, IntentConfiguration, interactive widgets iOS 17+) covering widget architecture, timeline-based updates, user configuration, interactivity, and deep linking
+description: Use when migrating Android widget patterns (AppWidgetProvider, Glance Compose widgets, RemoteViews, widget configuration, update strategies) to iOS WidgetKit equivalents (Widget protocol, TimelineProvider, TimelineEntry, IntentConfiguration, interactive widgets iOS 17+) covering widget architecture, timeline-based updates, user configuration, interactivity, and deep linking
 type: generic
 ---
 

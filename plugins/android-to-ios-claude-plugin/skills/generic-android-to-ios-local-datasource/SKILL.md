@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-local-datasource
-description: Migrate Android local data source pattern (interface + Room/DataStore implementation) to iOS local data source pattern (protocol + SwiftData/UserDefaults implementation) with caching and data mapping
+description: Use when migrating Android local data source pattern (interface + Room/DataStore implementation) to iOS local data source pattern (protocol + SwiftData/UserDefaults implementation) with caching and data mapping
 type: generic
 ---
 

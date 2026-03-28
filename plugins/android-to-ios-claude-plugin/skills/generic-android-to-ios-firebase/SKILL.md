@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-firebase
-description: Guides migration of Android Firebase SDK (Analytics, Crashlytics, Auth, Firestore, Remote Config, Cloud Functions, App Check) to iOS Firebase SDK via SPM/CocoaPods with GoogleService-Info.plist configuration, SwiftUI integration patterns, and async/await Firebase APIs
+description: Use when migrating Android Firebase SDK (Analytics, Crashlytics, Auth, Firestore, Remote Config, Cloud Functions, App Check) to iOS Firebase SDK via SPM/CocoaPods with GoogleService-Info.plist configuration, SwiftUI integration patterns, and async/await Firebase APIs
 type: generic
 ---
 

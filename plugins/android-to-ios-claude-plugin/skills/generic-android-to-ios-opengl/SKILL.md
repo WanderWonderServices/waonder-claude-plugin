@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-opengl
-description: Guides migration of Android OpenGL ES 3.x rendering (GLSurfaceView, EGLContext, GLSL shaders, textures, framebuffers, compute shaders) to iOS Metal (MTKView, MTLDevice, MTLCommandQueue, MSL shaders, Metal 3) with rendering pipeline mapping, shader translation, texture handling, and performance optimization
+description: Use when migrating Android OpenGL ES 3.x rendering (GLSurfaceView, EGLContext, GLSL shaders, textures, framebuffers, compute shaders) to iOS Metal (MTKView, MTLDevice, MTLCommandQueue, MSL shaders, Metal 3) with rendering pipeline mapping, shader translation, texture handling, and performance optimization
 type: generic
 ---
 

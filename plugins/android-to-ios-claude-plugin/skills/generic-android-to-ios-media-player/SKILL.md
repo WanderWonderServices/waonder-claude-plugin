@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-media-player
-description: Guides migration of Android Media3/ExoPlayer (PlayerView, MediaItem, adaptive streaming, DRM, media sessions, background playback) to iOS AVFoundation/AVKit (AVPlayer, AVPlayerViewController, AVAsset, HLS, FairPlay DRM, MPNowPlayingInfoCenter, background audio) with player setup, streaming, DRM integration, picture-in-picture, and media controls
+description: Use when migrating Android Media3/ExoPlayer (PlayerView, MediaItem, adaptive streaming, DRM, media sessions, background playback) to iOS AVFoundation/AVKit (AVPlayer, AVPlayerViewController, AVAsset, HLS, FairPlay DRM, MPNowPlayingInfoCenter, background audio) with player setup, streaming, DRM integration, picture-in-picture, and media controls
 type: generic
 ---
 

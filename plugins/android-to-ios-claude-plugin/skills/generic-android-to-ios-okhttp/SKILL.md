@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-okhttp
-description: Migrate Android OkHttp (HTTP engine, interceptors, SSL pinning, caching, connection pooling) to iOS URLSessionConfiguration, URLProtocol, ATS, URLCache, and certificate pinning
+description: Use when migrating Android OkHttp (HTTP engine, interceptors, SSL pinning, caching, connection pooling) to iOS URLSessionConfiguration, URLProtocol, ATS, URLCache, and certificate pinning
 type: generic
 ---
 

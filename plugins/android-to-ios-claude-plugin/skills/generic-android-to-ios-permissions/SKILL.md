@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-permissions
-description: Guides migration of Android permission system (uses-permission, runtime permissions via ActivityResultContracts, permission groups, shouldShowRequestPermissionRationale) to iOS equivalents (Info.plist usage descriptions, framework-specific authorization APIs like PHPhotoLibrary, CLLocationManager, ATTrackingManager, permission flow design, rationale handling, settings redirect)
+description: Use when migrating Android permission system (uses-permission, runtime permissions via ActivityResultContracts, permission groups, shouldShowRequestPermissionRationale) to iOS equivalents (Info.plist usage descriptions, framework-specific authorization APIs like PHPhotoLibrary, CLLocationManager, ATTrackingManager, permission flow design, rationale handling, settings redirect)
 type: generic
 ---
 

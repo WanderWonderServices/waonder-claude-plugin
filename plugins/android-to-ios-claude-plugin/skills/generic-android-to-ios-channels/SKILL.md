@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-channels
-description: Migrates Kotlin Channel patterns (rendezvous, buffered, conflated, produce/consumeEach) to iOS equivalents (AsyncChannel, AsyncStream.Continuation, actor-based patterns)
+description: Use when migrating Kotlin Channel patterns (rendezvous, buffered, conflated, produce/consumeEach) to iOS equivalents (AsyncChannel, AsyncStream.Continuation, actor-based patterns)
 type: generic
 ---
 

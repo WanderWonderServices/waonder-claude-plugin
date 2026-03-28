@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-compose-testing
-description: Guides migration of Android Compose UI testing patterns (composeTestRule, onNodeWithText, performClick, semantic trees, test tags) to iOS SwiftUI testing equivalents (ViewInspector for unit tests, XCUITest for integration, swift-snapshot-testing), covering semantic-based testing, snapshot testing, interaction testing, accessibility testing, and test architecture
+description: Use when migrating Android Compose UI testing patterns (composeTestRule, onNodeWithText, performClick, semantic trees, test tags) to iOS SwiftUI testing equivalents (ViewInspector for unit tests, XCUITest for integration, swift-snapshot-testing), covering semantic-based testing, snapshot testing, interaction testing, accessibility testing, and test architecture
 type: generic
 ---
 

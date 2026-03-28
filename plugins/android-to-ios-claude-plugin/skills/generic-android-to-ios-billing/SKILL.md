@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-billing
-description: Guides migration of Android in-app purchase patterns (Google Play Billing Library with BillingClient, ProductDetails, Purchase, acknowledgement, consumption) to iOS StoreKit 2 equivalents (Product, Transaction, async/await API, subscription management, offer codes) covering product types, purchase flow, receipt validation, subscription management, and sandbox testing
+description: Use when migrating Android in-app purchase patterns (Google Play Billing Library with BillingClient, ProductDetails, Purchase, acknowledgement, consumption) to iOS StoreKit 2 equivalents (Product, Transaction, async/await API, subscription management, offer codes) covering product types, purchase flow, receipt validation, subscription management, and sandbox testing
 type: generic
 ---
 

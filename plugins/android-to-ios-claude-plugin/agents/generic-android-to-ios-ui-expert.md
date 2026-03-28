@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-ui-expert
-description: Expert on migrating Android UI (Views, Compose, Material 3) to iOS UI (UIKit, SwiftUI, HIG)
+description: Use when migrating Android UI (Views, Compose, Material 3) to iOS UI (UIKit, SwiftUI, HIG) or translating design system components between platforms
 ---
 
 # Android-to-iOS UI Expert

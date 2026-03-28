@@ -1,6 +1,6 @@
 ---
 name: generic-agent-updater
-description: Scans the local agents folder, runs every agent in parallel to self-verify its data is still accurate, and removes or updates any stale references
+description: Use when agents need a bulk health-check — scans the local agents folder, runs every agent in parallel to self-verify its data is still accurate, and removes or updates any stale references
 type: generic
 ---
 

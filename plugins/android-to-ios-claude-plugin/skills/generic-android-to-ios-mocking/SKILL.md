@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-mocking
-description: Guides migration of Android mocking patterns (MockK with every/verify/coEvery/slot/relaxed mocks, Mockito-Kotlin, Turbine for Flow testing) to iOS equivalents (protocol-based manual mocks, Mockolo code generation, Combine testing with expectations), covering why Swift cannot do runtime mocking, protocol-oriented design for testability, fake vs mock vs stub patterns, and testing async code
+description: Use when migrating Android mocking patterns (MockK with every/verify/coEvery/slot/relaxed mocks, Mockito-Kotlin, Turbine for Flow testing) to iOS equivalents (protocol-based manual mocks, Mockolo code generation, Combine testing with expectations), covering why Swift cannot do runtime mocking, protocol-oriented design for testability, fake vs mock vs stub patterns, and testing async code
 type: generic
 ---
 

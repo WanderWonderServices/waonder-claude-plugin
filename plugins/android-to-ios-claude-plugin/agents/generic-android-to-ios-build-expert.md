@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-build-expert
-description: Expert on migrating Android build systems (Gradle, modules, variants) to iOS (SPM, Xcode, schemes)
+description: Use when migrating Android build systems (Gradle, modules, variants) to iOS (SPM, Xcode, schemes) or troubleshooting build configuration parity between platforms
 ---
 
 # Android-to-iOS Build Expert

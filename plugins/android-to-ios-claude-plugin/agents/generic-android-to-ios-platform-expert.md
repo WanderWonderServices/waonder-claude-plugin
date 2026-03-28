@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-platform-expert
-description: Expert on migrating Android platform APIs (lifecycle, permissions, background work, hardware) to iOS equivalents
+description: Use when migrating Android platform APIs (lifecycle, permissions, background work, hardware) to iOS equivalents or translating OS-level behaviors between platforms
 ---
 
 # Android-to-iOS Platform Expert

@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-stateflow
-description: Migrates Kotlin StateFlow and SharedFlow patterns (UI state holders, event channels) to iOS equivalents (@Observable, @Published, CurrentValueSubject, PassthroughSubject)
+description: Use when migrating Kotlin StateFlow and SharedFlow patterns (UI state holders, event channels) to iOS equivalents (@Observable, @Published, CurrentValueSubject, PassthroughSubject)
 type: generic
 ---
 
@@ -523,6 +523,7 @@ fun `emits navigation event on success`() = runTest {
 5. **Atomic updates**: `MutableStateFlow.update {}` is thread-safe/atomic. In iOS with `@MainActor`, property assignments are serial on the main actor — inherently safe.
 6. **Do not use `@Published` with `@Observable`**: These are separate observation systems. `@Observable` uses the Observation framework. `@Published` uses Combine. Do not mix them.
 7. **Event deduplication**: StateFlow uses `equals` to deduplicate. `@Observable` triggers updates on every assignment. Use `@Observable` with computed properties or manual checks for deduplication if needed.
+8. **`@Observable` + `lazy var` conflict** — StateFlow migrations often produce `@Observable` classes with lazy-initialized dependencies. The `@Observable` macro conflicts with `lazy var`. Use `@ObservationIgnored lazy var` or initialize eagerly in `init`.
 
 ## Migration Checklist
 

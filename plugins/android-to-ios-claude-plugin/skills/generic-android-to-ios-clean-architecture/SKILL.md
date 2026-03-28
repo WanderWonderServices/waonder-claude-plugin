@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-clean-architecture
-description: Guides migration of Android Clean Architecture (domain/data/presentation layers, Gradle modules, dependency rules) to iOS equivalents (MVVM-C / TCA / VIP, SPM modules, layer boundaries) with module structure and navigation patterns
+description: Use when migrating Android Clean Architecture (domain/data/presentation layers, Gradle modules, dependency rules) to iOS equivalents (MVVM-C / TCA / VIP, SPM modules, layer boundaries) with module structure and navigation patterns
 type: generic
 ---
 

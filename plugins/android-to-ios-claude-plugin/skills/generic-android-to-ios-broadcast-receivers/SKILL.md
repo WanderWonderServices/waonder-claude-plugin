@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-broadcast-receivers
-description: Migrate Android BroadcastReceiver patterns (manifest-registered, context-registered, LocalBroadcastManager, system broadcasts) to iOS NotificationCenter, Darwin notifications, and framework-specific delegates/callbacks
+description: Use when migrating Android BroadcastReceiver patterns (manifest-registered, context-registered, LocalBroadcastManager, system broadcasts) to iOS NotificationCenter, Darwin notifications, and framework-specific delegates/callbacks
 type: generic
 ---
 

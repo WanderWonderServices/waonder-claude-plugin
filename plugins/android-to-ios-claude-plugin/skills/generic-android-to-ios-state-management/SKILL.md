@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-state-management
-description: Migrates Android Compose state management patterns (remember, mutableStateOf, State<T>, derivedStateOf, rememberSaveable, ViewModel) to iOS SwiftUI equivalents (@State, @Binding, @Observable, @Environment, @AppStorage, and architecture patterns)
+description: Use when migrating Android Compose state management patterns (remember, mutableStateOf, State<T>, derivedStateOf, rememberSaveable, ViewModel) to iOS SwiftUI equivalents (@State, @Binding, @Observable, @Environment, @AppStorage, and architecture patterns)
 type: generic
 ---
 
@@ -663,6 +663,10 @@ struct EditProfileView: View {
 
 12. **Combine vs. async/await** -- Older iOS code uses Combine (`Publishers`, `sink`, `assign`). Modern iOS code (2024-2025) prefers `async/await` and `AsyncSequence`. When migrating from Android's coroutine-based `Flow`, use `AsyncStream` or `AsyncSequence` rather than Combine.
 
+13. **⚠️ `@Observable` is incompatible with `lazy var` (CRITICAL — 69% of migration build errors)** -- The `@Observable` macro generates access-tracking wrappers for every stored property. `lazy var` requires its own synthesized backing storage, which conflicts. Any Kotlin `by lazy { }` inside a class that becomes `@Observable` must either be converted to a non-lazy property or annotated with `@ObservationIgnored`.
+
+14. **⚠️ Missing `Equatable` conformance for SwiftUI** -- Kotlin `data class` auto-generates `equals()`. Swift structs do not. Any type used with `.onChange(of:)`, `ForEach` identity, or `@Observable` properties must conform to `Equatable`. When migrating `data class` or `sealed class` used in UI state, always add `: Equatable`. For simple structs, Swift can synthesize it automatically — just declare conformance.
+
 ## Migration Checklist
 
 1. **Inventory all state holders** -- List every `remember { mutableStateOf() }`, `rememberSaveable`, `derivedStateOf`, `ViewModel`, `StateFlow`, and `SharedFlow` in the Android feature.
@@ -679,3 +683,4 @@ struct EditProfileView: View {
 12. **Convert state hoisting** -- Replace Compose state hoisting (value + onValueChange callbacks) with `@Binding` parameters in child views.
 13. **Test state preservation** -- Verify `@SceneStorage` and `@AppStorage` persist across app termination and relaunch. Test with different scenes on iPad.
 14. **Test observation granularity** -- Verify that only views reading changed properties re-evaluate. Use `Self._printChanges()` in `body` during development to debug unnecessary re-evaluations.
+15. **Add `Equatable` conformance to all migrated state types used in SwiftUI observation** -- Any `data class` or `sealed class` used in UI state (e.g., with `.onChange(of:)`, `ForEach`, or `@Observable` properties) must conform to `Equatable` in Swift.

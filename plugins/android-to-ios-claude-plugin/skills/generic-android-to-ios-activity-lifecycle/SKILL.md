@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-activity-lifecycle
-description: Guides migration of Android Activity/Fragment lifecycle (onCreate, onStart, onResume, onPause, onStop, onDestroy) to iOS UIViewController lifecycle (viewDidLoad, viewWillAppear, viewDidAppear, viewWillDisappear, viewDidDisappear, deinit) and SwiftUI equivalents (.onAppear, .onDisappear, .task), including configuration changes, state restoration, and rotation handling
+description: Use when migrating Android Activity/Fragment lifecycle (onCreate, onStart, onResume, onPause, onStop, onDestroy) to iOS UIViewController lifecycle (viewDidLoad, viewWillAppear, viewDidAppear, viewWillDisappear, viewDidDisappear, deinit) and SwiftUI equivalents (.onAppear, .onDisappear, .task), including configuration changes, state restoration, and rotation handling
 type: generic
 ---
 

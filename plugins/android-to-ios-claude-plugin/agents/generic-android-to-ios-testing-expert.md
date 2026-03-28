@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-testing-expert
-description: Expert on migrating Android testing (JUnit, Espresso, MockK) to iOS testing (Swift Testing, XCUITest, protocol mocks)
+description: Use when migrating Android tests (JUnit, Espresso, MockK) to iOS testing frameworks (Swift Testing, XCUITest, protocol mocks) or redesigning test strategy for Swift
 ---
 
 # Android-to-iOS Testing Expert

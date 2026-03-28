@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-retrofit
-description: Migrate Android Retrofit (type-safe HTTP client with annotations, converters, call adapters) to iOS URLSession (native), Alamofire, or Moya for API layer definition and networking
+description: Use when migrating Android Retrofit (type-safe HTTP client with annotations, converters, call adapters) to iOS URLSession (native), Alamofire, or Moya for API layer definition and networking
 type: generic
 ---
 

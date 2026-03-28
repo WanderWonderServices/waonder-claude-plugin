@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-composable
-description: Migrates Android Composable function patterns (@Composable, remember, LaunchedEffect, SideEffect, slots, content lambdas) to iOS SwiftUI equivalents (View structs, @ViewBuilder, @State, .task, .onAppear)
+description: Use when migrating Android Composable function patterns (@Composable, remember, LaunchedEffect, SideEffect, slots, content lambdas) to iOS SwiftUI equivalents (View structs, @ViewBuilder, @State, .task, .onAppear)
 type: generic
 ---
 
@@ -428,6 +428,8 @@ var body: some View {
 9. **`@Composable` function vs. View struct lifecycle** -- A `@Composable` function has no persistent identity beyond its position in the call tree. A SwiftUI `View` struct is a value type recreated on every parent body evaluation, but SwiftUI preserves its `@State` based on structural identity. This distinction matters for understanding when state is preserved vs. reset.
 
 10. **Conditional composables vs. conditional views** -- In Compose, wrapping a composable in `if` creates/destroys it on toggle, resetting `remember` state. In SwiftUI, `if/else` branches create different structural identities, resetting `@State`. Use `.opacity(condition ? 1 : 0)` to hide without destroying.
+
+11. **Missing `Equatable` conformance** -- Kotlin `data class` auto-generates `equals()`. Swift structs don't. Types used with `.onChange(of:)` must conform to `Equatable`. Always add `: Equatable` to migrated state structs and event enums.
 
 ## Migration Checklist
 

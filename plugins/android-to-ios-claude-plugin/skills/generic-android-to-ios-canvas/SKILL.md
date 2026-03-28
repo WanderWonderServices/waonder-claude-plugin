@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-canvas
-description: Guides migration of Android Canvas drawing (Compose DrawScope, android.graphics.Canvas, Paint, Path, drawArc/drawRect/drawPath) to iOS equivalents (SwiftUI Canvas/GraphicsContext, Core Graphics CGContext, UIBezierPath, CAShapeLayer) with drawing primitives mapping, custom shapes, animations, gradients, clipping, and hit testing
+description: Use when migrating Android Canvas drawing (Compose DrawScope, android.graphics.Canvas, Paint, Path, drawArc/drawRect/drawPath) to iOS equivalents (SwiftUI Canvas/GraphicsContext, Core Graphics CGContext, UIBezierPath, CAShapeLayer) with drawing primitives mapping, custom shapes, animations, gradients, clipping, and hit testing
 type: generic
 ---
 

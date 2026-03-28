@@ -1,6 +1,6 @@
 ---
 name: waonder-help
-description: Lists all available Waonder plugin skills grouped by domain
+description: Use when the user asks what skills are available or needs to discover Waonder plugin capabilities — lists all skills grouped by domain
 type: generic
 ---
 

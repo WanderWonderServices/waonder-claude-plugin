@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-navigation
-description: Migrate Android Jetpack Navigation Component and Navigation Compose patterns to iOS NavigationStack, NavigationPath, and programmatic navigation (iOS 16+)
+description: Use when migrating Android Jetpack Navigation Component and Navigation Compose patterns to iOS NavigationStack, NavigationPath, and programmatic navigation (iOS 16+)
 type: generic
 ---
 

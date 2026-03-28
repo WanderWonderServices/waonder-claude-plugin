@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-code-shrinking
-description: Guides migration of Android code shrinking and optimization (R8/ProGuard rules, obfuscation, mapping files) to iOS equivalents (Swift compiler optimizations, WMO, dead code stripping, symbol stripping, app thinning) with binary size optimization strategies, optimization flags, and build pipeline configuration
+description: Use when migrating Android code shrinking and optimization (R8/ProGuard rules, obfuscation, mapping files) to iOS equivalents (Swift compiler optimizations, WMO, dead code stripping, symbol stripping, app thinning) with binary size optimization strategies, optimization flags, and build pipeline configuration
 type: generic
 ---
 

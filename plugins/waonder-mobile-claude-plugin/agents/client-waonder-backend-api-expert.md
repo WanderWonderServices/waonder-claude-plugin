@@ -1,6 +1,6 @@
 ---
 name: client-waonder-backend-api-expert
-description: Expert on the Waonder backend NestJS API — endpoints, auth, data models, request/response contracts, and external integrations. Auto-updates itself with latest API changes on each run.
+description: Use when working on backend API endpoints, authentication, data models, request/response contracts, or external integrations in the Waonder NestJS API. Auto-updates itself with latest API changes on each run.
 model: sonnet
 color: orange
 ---

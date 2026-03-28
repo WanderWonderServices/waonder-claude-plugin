@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-flows
-description: Migrates Kotlin Flow patterns (flow builders, operators, flowOn, collect) to iOS equivalents (AsyncSequence, AsyncStream, Combine publishers)
+description: Use when migrating Kotlin Flow patterns (flow builders, operators, flowOn, collect) to iOS equivalents (AsyncSequence, AsyncStream, Combine publishers)
 type: generic
 ---
 

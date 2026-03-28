@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-resources
-description: Guides migration of Android resource system (strings.xml, dimens.xml, colors.xml, styles.xml, themes.xml, resource qualifiers for locale/density/screen size/night mode) to iOS equivalents (String Catalogs .xcstrings, Asset Catalogs for colors/data, SwiftUI environment values, system colors, Dynamic Type)
+description: Use when migrating Android resource system (strings.xml, dimens.xml, colors.xml, styles.xml, themes.xml, resource qualifiers for locale/density/screen size/night mode) to iOS equivalents (String Catalogs .xcstrings, Asset Catalogs for colors/data, SwiftUI environment values, system colors, Dynamic Type)
 type: generic
 ---
 

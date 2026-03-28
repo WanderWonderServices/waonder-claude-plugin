@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-paging
-description: Guides migration of Android Paging 3 (PagingSource, RemoteMediator, PagingData, LazyPagingItems in Compose, LoadState) to iOS equivalents (custom pagination with onAppear-triggered loading, AsyncSequence-based data loading, infinite scroll in List/LazyVStack) with cursor/offset pagination, caching, and error/loading states
+description: Use when migrating Android Paging 3 (PagingSource, RemoteMediator, PagingData, LazyPagingItems in Compose, LoadState) to iOS equivalents (custom pagination with onAppear-triggered loading, AsyncSequence-based data loading, infinite scroll in List/LazyVStack) with cursor/offset pagination, caching, and error/loading states
 type: generic
 ---
 

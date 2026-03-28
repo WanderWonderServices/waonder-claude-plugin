@@ -1,6 +1,6 @@
 ---
 name: generic-mobile-landmark-generation
-description: Remove white backgrounds from generated landmark images and prepare them as transparent PNGs with consistent padding for use on the Waonder map
+description: Use when generated landmark images need white background removal and preparation as transparent PNGs with consistent padding for use on the Waonder map
 type: generic
 ---
 

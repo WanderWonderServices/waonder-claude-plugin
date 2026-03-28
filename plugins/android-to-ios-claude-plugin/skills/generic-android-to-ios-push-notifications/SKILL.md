@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-push-notifications
-description: Guides migration of Android FCM push notifications (FirebaseMessagingService, token management, data/notification messages, channels, notification importance) to iOS APNs + UNUserNotificationCenter (UNNotificationServiceExtension, rich notifications, categories, provisional authorization) with payload differences, silent push, and token registration
+description: Use when migrating Android FCM push notifications (FirebaseMessagingService, token management, data/notification messages, channels, notification importance) to iOS APNs + UNUserNotificationCenter (UNNotificationServiceExtension, rich notifications, categories, provisional authorization) with payload differences, silent push, and token registration
 type: generic
 ---
 

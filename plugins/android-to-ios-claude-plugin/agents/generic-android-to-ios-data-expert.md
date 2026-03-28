@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-data-expert
-description: Expert on migrating Android data layer (Room, Retrofit, DataStore) to iOS (SwiftData, URLSession, UserDefaults)
+description: Use when migrating Android data layer components (Room, Retrofit, DataStore) to iOS equivalents (SwiftData, URLSession, UserDefaults) or designing offline-first data architecture on iOS
 ---
 
 # Android-to-iOS Data Expert

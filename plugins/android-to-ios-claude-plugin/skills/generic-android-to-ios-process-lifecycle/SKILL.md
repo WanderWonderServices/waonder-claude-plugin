@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-process-lifecycle
-description: Guides migration of Android ProcessLifecycleOwner (app-level foreground/background tracking, Lifecycle.Event) to iOS equivalents (ScenePhase in SwiftUI, UIApplication.State, willResignActive/didBecomeActive notifications), covering app-level state tracking, analytics session management, connection management, and timer handling
+description: Use when migrating Android ProcessLifecycleOwner (app-level foreground/background tracking, Lifecycle.Event) to iOS equivalents (ScenePhase in SwiftUI, UIApplication.State, willResignActive/didBecomeActive notifications), covering app-level state tracking, analytics session management, connection management, and timer handling
 type: generic
 ---
 

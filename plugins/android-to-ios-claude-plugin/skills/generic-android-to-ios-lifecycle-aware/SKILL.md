@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-lifecycle-aware
-description: Guides migration of Android lifecycle-aware components (LifecycleObserver, DefaultLifecycleObserver, repeatOnLifecycle, flowWithLifecycle) to iOS equivalents (SwiftUI .onAppear, .onDisappear, .task, .onChange modifiers, Combine + view lifecycle, UIKit observation patterns), covering automatic cleanup, subscription management, and safe collection patterns
+description: Use when migrating Android lifecycle-aware components (LifecycleObserver, DefaultLifecycleObserver, repeatOnLifecycle, flowWithLifecycle) to iOS equivalents (SwiftUI .onAppear, .onDisappear, .task, .onChange modifiers, Combine + view lifecycle, UIKit observation patterns), covering automatic cleanup, subscription management, and safe collection patterns
 type: generic
 ---
 

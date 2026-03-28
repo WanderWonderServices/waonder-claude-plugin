@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-local-assets
-description: Guides migration of Android local assets (res/drawable vectors/bitmaps/9-patch, res/raw, res/font, assets/ directory, density qualifiers) to iOS equivalents (Asset Catalogs .xcassets with image sets/symbol images, SF Symbols, Bundle resources, custom fonts via Info.plist, @1x/@2x/@3x density handling)
+description: Use when migrating Android local assets (res/drawable vectors/bitmaps/9-patch, res/raw, res/font, assets/ directory, density qualifiers) to iOS equivalents (Asset Catalogs .xcassets with image sets/symbol images, SF Symbols, Bundle resources, custom fonts via Info.plist, @1x/@2x/@3x density handling)
 type: generic
 ---
 

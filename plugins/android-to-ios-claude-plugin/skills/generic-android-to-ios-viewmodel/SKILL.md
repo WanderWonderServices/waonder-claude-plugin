@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-viewmodel
-description: Guides migration of Android ViewModel patterns (androidx.lifecycle.ViewModel, viewModelScope, SavedStateHandle) to iOS equivalents (@Observable, ObservableObject, @StateObject, @EnvironmentObject) with lifecycle-awareness, scope management, state preservation, and DI integration
+description: Use when migrating Android ViewModel patterns (androidx.lifecycle.ViewModel, viewModelScope, SavedStateHandle) to iOS equivalents (@Observable, ObservableObject, @StateObject, @EnvironmentObject) with lifecycle-awareness, scope management, state preservation, and DI integration
 type: generic
 ---
 
@@ -281,17 +281,38 @@ struct SettingsViewModel {
 
 ## Common Pitfalls
 
-1. **Recreating the ViewModel on every view redraw** — On iOS 15-16, use `@StateObject`, never `@ObservedObject`, for owned ViewModels. On iOS 17+, use `@State` with `@Observable` classes. Using `@ObservedObject` or bare `let` causes the ViewModel to be re-created on parent redraws.
+1. **`@Observable` macro conflicts with `lazy var` (CRITICAL)** — Swift's `@Observable` macro synthesizes property accessors for all stored properties. `lazy var` conflicts with this because it needs its own storage mechanism. When migrating Kotlin `by lazy { }` delegates inside a ViewModel:
+   - If the lazy property is a dependency that never changes, convert it to a regular `let` or `var` initialized in `init`
+   - If it must remain lazily initialized, annotate it with `@ObservationIgnored lazy var`
+   - If it holds observable state that the view reads, refactor it to a regular `var` (not lazy) and initialize in `init`
 
-2. **Forgetting task cancellation** — Android's `viewModelScope` auto-cancels. On iOS, you must cancel `Task` references manually in `deinit` or use `.task { }` view modifier which auto-cancels when the view disappears.
+```swift
+// WRONG
+@Observable final class FooViewModel {
+    lazy var formatter = DateFormatter()  // ERROR
+}
 
-3. **Publishing changes off the main actor** — `@Published` property changes must happen on the main thread. Use `@MainActor` on the ViewModel class or on individual methods that mutate published state.
+// CORRECT
+@Observable final class FooViewModel {
+    @ObservationIgnored lazy var formatter = DateFormatter()
+}
+```
 
-4. **Overusing @EnvironmentObject for non-shared state** — Only use environment injection for genuinely shared state (like Android's `activityViewModels`). View-owned state should use `@State`/`@StateObject`.
+2. **Swift requires explicit argument labels** — Kotlin function calls use positional arguments by default (`loadUser("abc")`). Swift requires labels at the call site (`loadUser(userId: "abc")`). When migrating ViewModel methods, decide for each parameter whether to keep the label (default) or suppress with `_`. Convention: single-parameter actions often suppress (`func onNameChanged(_ name: String)`), multi-parameter methods keep labels.
 
-5. **One-shot events** — Android's `Channel`-based events do not have a direct SwiftUI equivalent. Avoid using `@Published` for events since new subscribers replay the last value. Use an optional property that is nil-ed out after consumption, or use a callback-based approach.
+3. **Missing framework imports** — Kotlin auto-imports; Swift requires explicit `import` statements. Commonly missed: `import UIKit` (for `UIApplication`, `UIColor`), `import Combine` (for `PassthroughSubject`), `import SwiftUI`.
 
-6. **SavedStateHandle misunderstanding** — `@SceneStorage` only works with value types (String, Int, Double, Bool, Data, URL). For complex objects, serialize to Data first. Unlike SavedStateHandle, it only works inside SwiftUI views, not inside ViewModel classes.
+4. **Recreating the ViewModel on every view redraw** — On iOS 15-16, use `@StateObject`, never `@ObservedObject`, for owned ViewModels. On iOS 17+, use `@State` with `@Observable` classes. Using `@ObservedObject` or bare `let` causes the ViewModel to be re-created on parent redraws.
+
+5. **Forgetting task cancellation** — Android's `viewModelScope` auto-cancels. On iOS, you must cancel `Task` references manually in `deinit` or use `.task { }` view modifier which auto-cancels when the view disappears.
+
+6. **Publishing changes off the main actor** — `@Published` property changes must happen on the main thread. Use `@MainActor` on the ViewModel class or on individual methods that mutate published state.
+
+7. **Overusing @EnvironmentObject for non-shared state** — Only use environment injection for genuinely shared state (like Android's `activityViewModels`). View-owned state should use `@State`/`@StateObject`.
+
+8. **One-shot events** — Android's `Channel`-based events do not have a direct SwiftUI equivalent. Avoid using `@Published` for events since new subscribers replay the last value. Use an optional property that is nil-ed out after consumption, or use a callback-based approach.
+
+9. **SavedStateHandle misunderstanding** — `@SceneStorage` only works with value types (String, Int, Double, Bool, Data, URL). For complex objects, serialize to Data first. Unlike SavedStateHandle, it only works inside SwiftUI views, not inside ViewModel classes.
 
 ## Migration Checklist
 

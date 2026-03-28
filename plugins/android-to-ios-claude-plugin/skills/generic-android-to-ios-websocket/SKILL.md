@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-websocket
-description: Guides migration of Android WebSocket implementations (OkHttp WebSocket, Ktor WebSocket, Scarlet) with Flow-based message streams and lifecycle-aware connections to iOS equivalents (URLSessionWebSocketTask, Starscream) with async/await integration, reconnection strategies, and Combine/AsyncStream-based message handling
+description: Use when migrating Android WebSocket implementations (OkHttp WebSocket, Ktor WebSocket, Scarlet) with Flow-based message streams and lifecycle-aware connections to iOS equivalents (URLSessionWebSocketTask, Starscream) with async/await integration, reconnection strategies, and Combine/AsyncStream-based message handling
 type: generic
 ---
 

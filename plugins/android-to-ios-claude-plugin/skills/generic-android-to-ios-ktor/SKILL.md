@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-ktor
-description: Migrate Android Ktor Client (multiplatform HTTP client with plugins, content negotiation, platform engines) to iOS via shared KMP module or native URLSession alternative
+description: Use when migrating Android Ktor Client (multiplatform HTTP client with plugins, content negotiation, platform engines) to iOS via shared KMP module or native URLSession alternative
 type: generic
 ---
 

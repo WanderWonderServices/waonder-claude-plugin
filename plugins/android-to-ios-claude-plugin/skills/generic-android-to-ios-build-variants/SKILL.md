@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-build-variants
-description: Guides migration of Android build types (debug/release), product flavors, build variants, dimension, and BuildConfig to iOS equivalents (Xcode Schemes, Build Configurations, xcconfig files, compiler flags, and #if DEBUG) with environment switching, per-variant API endpoints, signing configurations, and CI/CD integration
+description: Use when migrating Android build types (debug/release), product flavors, build variants, dimension, and BuildConfig to iOS equivalents (Xcode Schemes, Build Configurations, xcconfig files, compiler flags, and #if DEBUG) with environment switching, per-variant API endpoints, signing configurations, and CI/CD integration
 type: generic
 ---
 

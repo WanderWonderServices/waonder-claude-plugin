@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-services
-description: Migrate Android Service patterns (started, bound, foreground services, WorkManager) to iOS Background Modes, BGTaskScheduler, Background URLSession, and platform-specific alternatives
+description: Use when migrating Android Service patterns (started, bound, foreground services, WorkManager) to iOS Background Modes, BGTaskScheduler, Background URLSession, and platform-specific alternatives
 type: generic
 ---
 

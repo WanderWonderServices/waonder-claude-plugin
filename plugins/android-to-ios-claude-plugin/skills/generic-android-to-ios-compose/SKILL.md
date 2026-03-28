@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-compose
-description: Migrates Android Jetpack Compose UI framework patterns (Modifier chains, recomposition, theming, layouts) to iOS SwiftUI equivalents (View protocol, ViewModifier, view body re-evaluation, environment)
+description: Use when migrating Android Jetpack Compose UI framework patterns (Modifier chains, recomposition, theming, layouts) to iOS SwiftUI equivalents (View protocol, ViewModifier, view body re-evaluation, environment)
 type: generic
 ---
 

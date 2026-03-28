@@ -1,6 +1,6 @@
 ---
 name: generic-android-to-ios-room-database
-description: Migrate Android Room database layer (entities, DAOs, migrations, TypeConverters, Flow queries) to iOS SwiftData (iOS 17+) or Core Data (older targets)
+description: Use when migrating Android Room database layer (entities, DAOs, migrations, TypeConverters, Flow queries) to iOS SwiftData (iOS 17+) or Core Data (older targets)
 type: generic
 ---
 
