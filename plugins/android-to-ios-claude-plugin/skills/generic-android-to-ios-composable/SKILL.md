@@ -324,6 +324,81 @@ LaunchedEffect(Unit) {
 }
 ```
 
+### LaunchedEffect(Unit) for ViewModel start() -- Safe Startup Pattern
+
+The recommended pattern for ViewModel initialization is to avoid side effects in the ViewModel constructor entirely. Instead, use `LaunchedEffect(Unit)` (Android) / `.task` (iOS) to call a `start()` method that kicks off observation and async work. Both ensure the ViewModel only starts work when the screen is actually visible.
+
+```kotlin
+// Android: ViewModel with no side effects in init
+@HiltViewModel
+class OrdersViewModel @Inject constructor(
+    private val repository: OrdersRepository
+) : ViewModel() {
+
+    private var started = false
+
+    fun start() {
+        if (started) return
+        started = true
+        viewModelScope.launch {
+            repository.observeOrders().collect { orders ->
+                _state.value = UiState.Success(orders)
+            }
+        }
+    }
+}
+
+@Composable
+fun OrdersScreen(viewModel: OrdersViewModel = hiltViewModel()) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    // LaunchedEffect(Unit) triggers start() exactly once when the screen appears
+    LaunchedEffect(Unit) {
+        viewModel.start()
+    }
+
+    // ... render state
+}
+```
+
+```swift
+// iOS: Equivalent pattern — .task triggers start()
+@MainActor
+@Observable
+final class OrdersViewModel {
+    private(set) var orders: [Order] = []
+    private var started = false
+    private let repository: OrdersRepository
+
+    // init is PURE — no Tasks, no side effects
+    init(repository: OrdersRepository) {
+        self.repository = repository
+    }
+
+    func start() async {
+        guard !started else { return }
+        started = true
+        for await newOrders in repository.ordersStream {
+            orders = newOrders
+        }
+    }
+}
+
+struct OrdersView: View {
+    @State private var viewModel: OrdersViewModel
+
+    var body: some View {
+        OrdersList(orders: viewModel.orders)
+            // .task triggers start() when the screen is visible, auto-cancels on disappear
+            .task {
+                await viewModel.start()
+            }
+    }
+}
+```
+
+**Why this matters on iOS**: SwiftUI creates and discards `View` instances during body evaluation and diffing. If the ViewModel is created inside `@State(initialValue:)`, the initializer runs even for discarded instances. Any Tasks launched in `init` become zombies that corrupt shared coordinator/repository state. The `start()` pattern with `.task` guarantees work only begins for the instance SwiftUI actually uses on screen.
+
 ### LaunchedEffect(key) -- Re-run when key changes
 
 ```kotlin
@@ -431,6 +506,8 @@ var body: some View {
 
 11. **Missing `Equatable` conformance** -- Kotlin `data class` auto-generates `equals()`. Swift structs don't. Types used with `.onChange(of:)` must conform to `Equatable`. Always add `: Equatable` to migrated state structs and event enums.
 
+12. **Side effects in ViewModel init** -- On Android, `viewModelScope.launch` in `init {}` works because the ViewModel is created once. On iOS, `@Observable` init must be pure because SwiftUI may create and discard View instances (and their `@State` initializers) during diffing. Always refactor to a `start()` method called from `LaunchedEffect(Unit)` (Android) / `.task` (iOS). Make `start()` idempotent with a `started` guard flag.
+
 ## Migration Checklist
 
 1. **Inventory all @Composable functions** -- List every `@Composable` function in the feature. Categorize as screen-level, component-level, or utility.
@@ -445,3 +522,4 @@ var body: some View {
 10. **Migrate `CompositionLocal`** -- Replace with `@Environment` and custom `EnvironmentKey` definitions.
 11. **Test state preservation** -- Verify that `@State` is preserved correctly during navigation and view updates. Check that conditional views preserve/reset state as expected.
 12. **Test async cancellation** -- Verify that `.task` blocks are properly cancelled on view disappearance. Check that debounce patterns work with `.task(id:)`.
+13. **Ensure ViewModel init is pure** -- Move any `viewModelScope.launch` from `init {}` to a `start()` method. Call `start()` from `LaunchedEffect(Unit)` (Android) / `.task { await viewModel.start() }` (iOS). Make `start()` idempotent with a `started` flag.

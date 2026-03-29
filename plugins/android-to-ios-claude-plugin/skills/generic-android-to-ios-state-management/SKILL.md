@@ -27,6 +27,7 @@ This skill provides a comprehensive guide for migrating state management pattern
 | `mutableStateMapOf<K,V>()` | `@State private var map: [K: V] = [:]` |
 | `ViewModel` | `@Observable` class (iOS 17+) or `ObservableObject` class |
 | `viewModel()` / `hiltViewModel()` | `@State private var viewModel = ViewModel()` or `@Environment` |
+| `init { viewModelScope.launch {} }` | `start()` method called via `.task { await vm.start() }` |
 | `StateFlow<T>` | `@Published var` (in `ObservableObject`) or property in `@Observable` |
 | `SharedFlow<T>` | `AsyncStream` or Combine `PassthroughSubject` |
 | `collectAsStateWithLifecycle()` | Automatic observation (iOS 17 `@Observable`) or `.onReceive()` |
@@ -195,14 +196,18 @@ struct TodoList: View {
 ### ViewModel Pattern (iOS 17+ with @Observable)
 
 ```kotlin
-// Android: ViewModel with StateFlow
+// Android: ViewModel with StateFlow — no side effects in init
 class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
-    init {
+    private var started = false
+
+    fun start() {
+        if (started) return
+        started = true
         viewModelScope.launch {
             val user = userRepository.getUser()
             _uiState.update { it.copy(user = user, isLoading = false) }
@@ -228,10 +233,14 @@ data class ProfileUiState(
     val isSaving: Boolean = false
 )
 
-// Usage in Compose:
+// Usage in Compose — trigger start from UI lifecycle:
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.start()
+    }
 
     if (uiState.isLoading) {
         CircularProgressIndicator()
@@ -247,6 +256,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
 
 ```swift
 // iOS (iOS 17+): @Observable class replaces ViewModel + StateFlow
+// NO side effects in init — use start() triggered by view lifecycle
 @Observable
 class ProfileViewModel {
     var user: User?
@@ -254,11 +264,22 @@ class ProfileViewModel {
     var isSaving = false
 
     private let userRepository: UserRepository
+    private var started = false
 
     init(userRepository: UserRepository) {
         self.userRepository = userRepository
+        // NOTHING else here — no Task, no async work
     }
 
+    /// Idempotent entry point. Called from .task { await viewModel.start() }.
+    @MainActor
+    func start() async {
+        guard !started else { return }
+        started = true
+        await loadProfile()
+    }
+
+    @MainActor
     func loadProfile() async {
         isLoading = true
         user = await userRepository.getUser()
@@ -269,6 +290,7 @@ class ProfileViewModel {
         user?.name = name
     }
 
+    @MainActor
     func saveProfile() async {
         isSaving = true
         if let user {
@@ -278,7 +300,7 @@ class ProfileViewModel {
     }
 }
 
-// Usage in SwiftUI:
+// Usage in SwiftUI — start() is triggered by the view lifecycle:
 struct ProfileScreen: View {
     @State private var viewModel: ProfileViewModel
 
@@ -299,7 +321,7 @@ struct ProfileScreen: View {
             }
         }
         .task {
-            await viewModel.loadProfile()
+            await viewModel.start()
         }
     }
 }
@@ -309,15 +331,25 @@ struct ProfileScreen: View {
 
 ```swift
 // iOS (iOS 14-16): ObservableObject + @Published
+// Same start() pattern — no side effects in init
 class ProfileViewModel: ObservableObject {
     @Published var user: User?
     @Published var isLoading = true
     @Published var isSaving = false
 
     private let userRepository: UserRepository
+    private var started = false
 
     init(userRepository: UserRepository) {
         self.userRepository = userRepository
+        // NOTHING else here
+    }
+
+    @MainActor
+    func start() async {
+        guard !started else { return }
+        started = true
+        await loadProfile()
     }
 
     @MainActor
@@ -346,7 +378,9 @@ struct ProfileScreen: View {
     }
 
     var body: some View {
-        // same as above
+        // same as iOS 17+ version
+        // ...
+        .task { await viewModel.start() }
     }
 }
 ```
@@ -625,6 +659,91 @@ class CheckoutViewModel2 {
 - Use `@MainActor` on observable classes to ensure thread safety for UI state.
 - Prefer `async/await` and structured concurrency over Combine for new code.
 
+## ViewModel Initialization — No Side Effects in init
+
+**Rule**: ViewModel `init` must be pure — no `Task` launches, no `viewModelScope.launch`, no network/database calls. All startup work belongs in an explicit, idempotent `start()` method triggered by the View lifecycle.
+
+### Why
+
+SwiftUI can create and immediately discard `@Observable` instances during view diffing. If `init` launches a `Task`, the zombie instance fires async work that corrupts shared state (repositories, caches, analytics counters). On Android, while `ViewModel` instances are stable, keeping `init` side-effect-free ensures platform parity and makes ViewModels testable without triggering real work.
+
+### Cross-Platform `start()` Pattern
+
+| Platform | ViewModel | View trigger |
+|----------|-----------|-------------|
+| Android | `fun start() { if (started) return; started = true; viewModelScope.launch { ... } }` | `LaunchedEffect(Unit) { viewModel.start() }` |
+| iOS 17+ | `@MainActor func start() async { guard !started else { return }; started = true; ... }` | `.task { await viewModel.start() }` |
+| iOS 15-16 | Same as iOS 17+ but class is `ObservableObject` | `.task { await viewModel.start() }` |
+
+### Concrete Example
+
+**Android**:
+```kotlin
+class UserViewModel(
+    private val getUserUseCase: GetUserUseCase
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(UserUiState())
+    val uiState = _uiState.asStateFlow()
+
+    private var started = false
+
+    fun start() {
+        if (started) return
+        started = true
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            val user = getUserUseCase()
+            _uiState.update { it.copy(user = user, isLoading = false) }
+        }
+    }
+}
+
+@Composable
+fun UserScreen(viewModel: UserViewModel = hiltViewModel()) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) { viewModel.start() }
+    // ...
+}
+```
+
+**iOS (Swift, iOS 17+)**:
+```swift
+@Observable
+final class UserViewModel {
+    var uiState = UserUiState()
+    private let getUserUseCase: GetUserUseCaseProtocol
+    private var started = false
+
+    init(getUserUseCase: GetUserUseCaseProtocol) {
+        self.getUserUseCase = getUserUseCase
+        // NO side effects
+    }
+
+    @MainActor
+    func start() async {
+        guard !started else { return }
+        started = true
+        uiState.isLoading = true
+        let user = await getUserUseCase.execute()
+        uiState.user = user
+        uiState.isLoading = false
+    }
+}
+
+struct UserScreen: View {
+    @State private var viewModel: UserViewModel
+
+    init(getUserUseCase: GetUserUseCaseProtocol) {
+        _viewModel = State(initialValue: UserViewModel(getUserUseCase: getUserUseCase))
+    }
+
+    var body: some View {
+        UserContent(state: viewModel.uiState)
+            .task { await viewModel.start() }
+    }
+}
+```
+
 ## Common Pitfalls and Gotchas
 
 1. **`@State` ownership** -- `@State` must be declared `private` and owned by the view that declares it. Never pass a `@State` property to a child view as `@State` -- use `@Binding` instead. The equivalent mistake on Android would be passing a `MutableState` directly instead of hoisting state.
@@ -667,6 +786,8 @@ struct EditProfileView: View {
 
 14. **⚠️ Missing `Equatable` conformance for SwiftUI** -- Kotlin `data class` auto-generates `equals()`. Swift structs do not. Any type used with `.onChange(of:)`, `ForEach` identity, or `@Observable` properties must conform to `Equatable`. When migrating `data class` or `sealed class` used in UI state, always add `: Equatable`. For simple structs, Swift can synthesize it automatically — just declare conformance.
 
+15. **⚠️ Launching Tasks in `@Observable` init creates zombie side effects (CRITICAL)** -- SwiftUI can create and discard `@Observable` instances during view diffing without ever displaying them. If `init` launches a `Task` (directly or by calling a method that launches one), the zombie instance fires network requests, writes to repositories, and corrupts shared state. **Always** use the `start()` pattern: keep `init` pure and trigger startup work from the View lifecycle via `.task { await viewModel.start() }` on iOS or `LaunchedEffect(Unit) { viewModel.start() }` on Android. See the "ViewModel Initialization" section above.
+
 ## Migration Checklist
 
 1. **Inventory all state holders** -- List every `remember { mutableStateOf() }`, `rememberSaveable`, `derivedStateOf`, `ViewModel`, `StateFlow`, and `SharedFlow` in the Android feature.
@@ -676,7 +797,7 @@ struct EditProfileView: View {
 5. **Convert `rememberSaveable`** -- Replace with `@SceneStorage` for UI state restoration or `@AppStorage` for persistent preferences.
 6. **Create `@Observable` classes** -- Convert each `ViewModel` to an `@Observable` class. Replace `StateFlow` properties with plain `var` properties. Replace `MutableStateFlow.update {}` with direct property assignment.
 7. **Convert `collectAsStateWithLifecycle()`** -- Remove entirely. SwiftUI automatically observes `@Observable` properties read in `body`.
-8. **Convert coroutine launches** -- Replace `viewModelScope.launch {}` with `async` methods called from `.task {}` or `Task {}` in action handlers.
+8. **Convert coroutine launches** -- Replace `viewModelScope.launch {}` with `async` methods called from `.task {}` or `Task {}` in action handlers. Move all `init {}` side effects into an idempotent `start()` method guarded by a `started` flag, triggered via `.task { await viewModel.start() }`.
 9. **Convert SharedFlow events** -- Replace with `@Observable` event properties consumed via `.onChange(of:)`, or `AsyncStream` consumed via `.task { for await }`.
 10. **Set up dependency injection** -- Replace Hilt/Koin `@Inject` with custom `EnvironmentKey` definitions and `.environment()` modifiers at the app root.
 11. **Add `@MainActor`** -- Mark all `@Observable` classes with `@MainActor` to ensure thread safety.

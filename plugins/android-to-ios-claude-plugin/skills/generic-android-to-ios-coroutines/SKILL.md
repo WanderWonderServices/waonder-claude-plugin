@@ -274,20 +274,44 @@ func fetchData() async throws -> Data {
 
 ## ViewModel Lifecycle Mapping
 
-### Android
+### Critical: viewModelScope.launch in init {} Must Become start() Called from the View
+
+Android's `viewModelScope` auto-cancels when the ViewModel is cleared. iOS `.task` auto-cancels when the view disappears. Both are lifecycle-aware, but the trigger point is different:
+
+- **Android**: `viewModelScope` is tied to the ViewModel's lifecycle. Launching in `init {}` works because the ViewModel is only created once and cleared when the screen is destroyed.
+- **iOS**: There is no equivalent ViewModel lifecycle scope. SwiftUI creates and discards `View` instances (and their `@State` initializers) during diffing. A `Task` launched in `init` becomes a zombie for discarded instances, corrupting shared state.
+
+The safe pattern: keep `init` pure on both platforms, and trigger `start()` from the View's lifecycle.
+
+### Android (Refactored)
 ```kotlin
 @HiltViewModel
-class MyViewModel @Inject constructor(
-    private val repo: Repository
+class ItemsViewModel @Inject constructor(
+    private val repo: ItemsRepository
 ) : ViewModel() {
-    init {
+
+    private var started = false
+
+    // Called from LaunchedEffect(Unit) in the Composable
+    fun start() {
+        if (started) return
+        started = true
         viewModelScope.launch {
-            repo.observeData().collect { data ->
-                _state.value = data
+            repo.observeItems().collect { items ->
+                _state.value = items
             }
         }
     }
     // viewModelScope automatically cancelled on onCleared()
+}
+
+// In the Composable
+@Composable
+fun ItemsScreen(viewModel: ItemsViewModel = hiltViewModel()) {
+    LaunchedEffect(Unit) {
+        viewModel.start()
+    }
+    // ... UI
 }
 ```
 
@@ -295,41 +319,67 @@ class MyViewModel @Inject constructor(
 ```swift
 @MainActor
 @Observable
-final class MyViewModel {
-    private let repo: RepositoryProtocol
-    private var observeTask: Task<Void, Never>?
+final class ItemsViewModel {
+    private let repo: ItemsRepositoryProtocol
+    private var started = false
 
-    var data: [Item] = []
+    var items: [Item] = []
 
-    init(repo: RepositoryProtocol) {
+    // init is PURE — no Tasks, no side effects
+    init(repo: ItemsRepositoryProtocol) {
         self.repo = repo
-        observeTask = Task { [weak self] in
-            guard let stream = self?.repo.observeData() else { return }
-            for await items in stream {
-                self?.data = items
-            }
-        }
     }
 
-    deinit {
-        observeTask?.cancel()
+    // Called from .task in the View
+    func start() async {
+        guard !started else { return }
+        started = true
+        for await newItems in repo.itemsStream {
+            items = newItems
+        }
     }
 }
 
-// Or in SwiftUI, use .task modifier (auto-cancelled on view disappear)
-struct MyScreen: View {
-    @State private var viewModel: MyViewModel
+// .task auto-cancels on view disappear — equivalent to viewModelScope auto-cancel
+struct ItemsScreen: View {
+    @State private var viewModel: ItemsViewModel
 
     var body: some View {
-        List(viewModel.data) { item in
+        List(viewModel.items) { item in
             Text(item.name)
         }
         .task {
-            await viewModel.startObserving()
+            await viewModel.start()
         }
     }
 }
 ```
+
+### Why NOT launch in iOS init?
+
+```swift
+// BAD — Task in init becomes a zombie for discarded View instances
+init(repo: ItemsRepositoryProtocol) {
+    self.repo = repo
+    // SwiftUI may create and discard this ViewModel during diffing.
+    // This Task runs even for discarded instances, corrupting shared state.
+    Task { [weak self] in
+        guard let stream = self?.repo.itemsStream else { return }
+        for await items in stream {
+            self?.items = items
+        }
+    }
+}
+```
+
+### Scope Lifecycle Comparison
+
+| Concept | Android | iOS |
+|---|---|---|
+| Auto-cancelling scope | `viewModelScope` (tied to ViewModel clear) | `.task` modifier (tied to view disappear) |
+| Trigger point | `LaunchedEffect(Unit) { viewModel.start() }` | `.task { await viewModel.start() }` |
+| Cancellation moment | ViewModel `onCleared()` | View disappears from hierarchy |
+| Safe to launch in init? | Works but not recommended — refactor to `start()` | **Never** — creates zombies for discarded instances |
 
 ## Error Handling
 
@@ -395,7 +445,7 @@ fun `loadItems updates state`() = runTest {
 
 ## Common Pitfalls
 
-1. **No `viewModelScope` equivalent**: Swift has no built-in scope tied to ViewModel lifecycle. Store `Task` references and cancel them in `deinit`, or use SwiftUI's `.task` modifier.
+1. **No `viewModelScope` equivalent**: Swift has no built-in scope tied to ViewModel lifecycle. **Never launch Tasks in init** — SwiftUI creates and discards View instances during diffing, so init-launched Tasks become zombies. Use a `start()` method called from SwiftUI's `.task` modifier, which provides equivalent lifecycle-aware auto-cancellation.
 2. **Forgetting `@MainActor`**: Unlike `Dispatchers.Main`, Swift does not automatically switch to the main thread for UI updates. Annotate ViewModels or state-mutating code with `@MainActor`.
 3. **Catching `CancellationError`**: In Kotlin you must rethrow `CancellationException`. In Swift, `CancellationError` propagates naturally through `throws`, but catching it with a bare `catch` can silently swallow cancellation.
 4. **`Task.detached` overuse**: `Task.detached` does not inherit the parent actor context. Use it only when you explicitly need to escape `@MainActor` confinement.
@@ -406,7 +456,9 @@ fun `loadItems updates state`() = runTest {
 ## Migration Checklist
 
 - [ ] Convert all `suspend fun` to `async throws` functions
-- [ ] Replace `viewModelScope.launch` with `Task { }` (store reference for cancellation)
+- [ ] Refactor `viewModelScope.launch` in `init {}` to a `start()` method called from `.task` in the View
+- [ ] Make `start()` idempotent with a `started` guard flag
+- [ ] Replace remaining `viewModelScope.launch` with `Task { }` (store reference for cancellation)
 - [ ] Replace `async { }.await()` with `async let` or `TaskGroup`
 - [ ] Replace `withContext(Dispatchers.Main)` with `@MainActor`
 - [ ] Replace `withContext(Dispatchers.IO)` — usually not needed; Swift manages threads

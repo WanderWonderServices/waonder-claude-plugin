@@ -485,6 +485,116 @@ struct DashboardView: View {
 | Automatic observer removal | `.task` auto-cancellation | Manual cancellation required |
 | `lifecycle.currentState.isAtLeast(STARTED)` | No direct check needed | `isViewLoaded && view.window != nil` |
 
+## Critical: No Side Effects in ViewModel init — Use start() from .task
+
+### Why This Matters
+
+SwiftUI creates and discards `View` instances during body evaluation and diffing. When a ViewModel is created inside `@State(initialValue:)`, the initializer runs even for instances that SwiftUI ultimately discards. Any `Task` launched in `init` becomes a zombie that corrupts shared coordinator or repository state, leaks resources, and produces unpredictable behavior.
+
+### The Pattern
+
+- **Android**: Refactor `init {}` with `viewModelScope.launch` into a `start()` method triggered by `LaunchedEffect(Unit)`.
+- **iOS**: Keep `@Observable init` pure (assign properties only). Call `start()` from `.task { await viewModel.start() }`.
+- Make `start()` idempotent using a `started` guard flag.
+
+### .task Is the ONLY Safe Place to Start Observation
+
+| Trigger | Auto-cancels on disappear? | Safe for long-lived work? |
+|---|---|---|
+| `init` | No | **NO** — runs for discarded instances, creates zombie Tasks |
+| `.onAppear` | No — fires but does NOT cancel on disappear | **NO** — must pair with `.onDisappear` manually, easy to leak |
+| `.task` | **Yes** — structured concurrency, auto-cancelled | **YES** — the only safe default for observation and async startup |
+
+Always prefer `.task` over `.onAppear` for starting async observation. `.onAppear` does not auto-cancel when the view disappears, so a Task launched inside it will outlive the view unless you manually track and cancel it in `.onDisappear`.
+
+### Android (Before Refactoring)
+
+```kotlin
+// BAD — side effects in init
+@HiltViewModel
+class DashboardViewModel @Inject constructor(
+    private val repository: DashboardRepository
+) : ViewModel() {
+    init {
+        viewModelScope.launch {
+            repository.observeMetrics().collect { metrics ->
+                _state.value = metrics
+            }
+        }
+    }
+}
+```
+
+### Android (After Refactoring)
+
+```kotlin
+// GOOD — start() called from LaunchedEffect
+@HiltViewModel
+class DashboardViewModel @Inject constructor(
+    private val repository: DashboardRepository
+) : ViewModel() {
+
+    private var started = false
+
+    fun start() {
+        if (started) return
+        started = true
+        viewModelScope.launch {
+            repository.observeMetrics().collect { metrics ->
+                _state.value = metrics
+            }
+        }
+    }
+}
+
+// In the Composable screen
+@Composable
+fun DashboardScreen(viewModel: DashboardViewModel = hiltViewModel()) {
+    LaunchedEffect(Unit) {
+        viewModel.start()
+    }
+    // ... UI
+}
+```
+
+### iOS Equivalent
+
+```swift
+@MainActor
+@Observable
+final class DashboardViewModel {
+    private(set) var metrics: [Metric] = []
+    private var started = false
+
+    private let repository: DashboardRepository
+
+    // init is PURE — no Tasks, no side effects
+    init(repository: DashboardRepository) {
+        self.repository = repository
+    }
+
+    func start() async {
+        guard !started else { return }
+        started = true
+        for await newMetrics in repository.metricsStream {
+            metrics = newMetrics
+        }
+    }
+}
+
+struct DashboardView: View {
+    @State private var viewModel: DashboardViewModel
+
+    var body: some View {
+        MetricsList(metrics: viewModel.metrics)
+            // .task auto-cancels on disappear — the ONLY safe trigger
+            .task {
+                await viewModel.start()
+            }
+    }
+}
+```
+
 ## Common Pitfalls
 
 ### 1. Not Cancelling Tasks in UIKit
@@ -581,6 +691,9 @@ Swift's `Task` cancellation is cooperative. Long-running loops must check `Task.
 
 ## Migration Checklist
 
+- [ ] Ensure ViewModel `init` is pure — no Task launches, no side effects. Move startup work to `start()` called from `.task`
+- [ ] Use `.task { await viewModel.start() }` instead of `.onAppear` for all async observation (`.task` auto-cancels; `.onAppear` does not)
+- [ ] Make `start()` idempotent with a `started` guard flag
 - [ ] Replace `DefaultLifecycleObserver` implementations with SwiftUI `.onAppear`/`.onDisappear` or custom `ViewLifecycleObserver` protocol
 - [ ] Replace `repeatOnLifecycle(STARTED) { flow.collect {} }` with `.task { for await ... }`
 - [ ] Replace `flowWithLifecycle` with `.task { for await value in stream {} }`
