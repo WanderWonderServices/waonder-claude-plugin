@@ -164,6 +164,7 @@ Always read at least 2 of these before writing a new test:
 
 ## Constraints
 
+- **Emulator ONLY** — tests MUST run on an Android emulator, NEVER on a real physical device. Real devices are reserved for active local development. If no emulator is running, use the `mobile-android-emulator-manager` skill to launch one before proceeding.
 - NEVER modify Android feature code — only test code
 - ALWAYS include `ScreenshotCapture` with captures at every key step
 - ALWAYS use the project's existing test patterns — no custom frameworks

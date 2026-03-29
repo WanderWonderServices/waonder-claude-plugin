@@ -143,9 +143,10 @@ try data.write(to: URL(fileURLWithPath: "/path/to/file.png"))
 
 ## Constraints
 
+- **Emulator/Simulator ONLY** — screenshots are always pulled from Android emulators and iOS Simulators, NEVER from real physical devices. Real devices are reserved for active local development.
 - Always create directories before writing files
 - Always verify screenshots are valid before processing
 - When reading screenshots, describe concrete UI elements — not vague impressions
 - Never modify test or feature code — this agent is read-only for code
 - Parity comparison must read BOTH images, not just one
-- Acceptable differences are ONLY truly unavoidable platform-native rendering: SF Pro vs Roboto font, iOS status bar style, system chrome, navigation bar. EVERYTHING else requires a fix — including colors, backgrounds, button shapes, accent colors, text treatment (case, spacing), icon styles, gradients vs flat fills
+- Acceptable differences are ONLY truly unavoidable platform-native rendering: SF Pro vs Roboto font, iOS status bar style, system chrome, navigation bar, flag emoji rendering on iOS Simulator. EVERYTHING else requires a fix — including colors, backgrounds, button shapes, accent colors, text treatment (case, spacing), icon styles, gradients vs flat fills

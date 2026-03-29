@@ -172,20 +172,59 @@ When fixing iOS code, reference these patterns by reading the corresponding Andr
 6. **Build the iOS project** — fix any compilation errors.
 7. **Run the iOS test** — capture output.
 8. **If it fails**:
+   - **Read the simulator logs first** (`ios_test_logs.txt`) — understand what happened at the app level before looking at test output
    - Classify the failure (build error, assertion, timeout, visual)
    - Determine if it's a test issue or feature code issue
    - Fix the appropriate code
+   - Save logs for this attempt (`ios_test_logs_attempt_{n}.txt`)
    - Re-run
-9. **Iterate** up to 10 times.
+9. **Iterate** up to 10 times for initial test creation. When fixing a specific visual parity issue (Phase 4), max 3 attempts — if unresolved, save diagnostic report and stop.
 10. **When the test passes**, capture iOS screenshots and COMPARE them visually against Android screenshots. If styling doesn't match, fix and re-run.
 11. **Report**: test file path, files created/modified, iterations used, iOS best practices checklist status, visual parity status, any remaining concerns.
 
+## iOS Simulator Log Capture Protocol
+
+**Every test run MUST capture simulator logs** to aid debugging when things don't work as expected.
+
+Before running the test, start log capture:
+```bash
+# Get the booted simulator UDID
+SIMULATOR_UDID=$(xcrun simctl list devices booted -j | python3 -c "import sys,json; devs=[d for r in json.load(sys.stdin)['devices'].values() for d in r if d['state']=='Booted']; print(devs[0]['udid'] if devs else '')")
+
+# Start capturing logs in background (filter to app logs)
+xcrun simctl spawn "$SIMULATOR_UDID" log stream \
+  --predicate 'subsystem == "com.app.waonder" OR process == "Waonder"' \
+  --style compact \
+  > ~/Documents/WaonderApps/sync-artifacts/{TestClassName}/ios_test_logs.txt 2>&1 &
+LOG_PID=$!
+```
+
+After the test completes (pass or fail), stop log capture:
+```bash
+kill $LOG_PID 2>/dev/null
+```
+
+When a test fails, **always read the log file** before attempting a fix. The logs reveal:
+- View lifecycle events that explain why an element isn't found
+- Network/async errors that explain timeouts
+- State management issues that explain wrong UI states
+- Navigation events that explain wrong screen transitions
+
+Save the log file per attempt when fixing issues:
+```bash
+cp ~/Documents/WaonderApps/sync-artifacts/{TestClassName}/ios_test_logs.txt \
+   ~/Documents/WaonderApps/sync-artifacts/{TestClassName}/ios_test_logs_attempt_{n}.txt
+```
+
 ## Constraints
 
+- **Simulator ONLY** — tests MUST run on an iOS Simulator, NEVER on a real physical device. Real devices are reserved for active local development. If no simulator is booted, boot one with `xcrun simctl boot "iPhone 16"` before proceeding.
 - Android code is READ-ONLY — never modify anything in `waonder-android`
 - iOS feature code CAN be modified — that's the whole point
 - Always maintain structural parity (same modules, folders, file names with iOS conventions)
 - Always include screenshot capture at the same steps as the Android test
+- Always capture simulator logs during every test run using the protocol above
 - Use `-UITestMode` launch argument for Firebase bypass
-- Max 10 iterations
+- Max 10 iterations when creating/fixing the initial iOS test
+- **Max 3 attempts per individual issue** when fixing specific visual parity issues in Phase 4. If an issue isn't solved in 3 attempts, save a diagnostic report with logs and stop.
 - If a fix requires more than 20 files changed in a single iteration, stop and report to the orchestrator
