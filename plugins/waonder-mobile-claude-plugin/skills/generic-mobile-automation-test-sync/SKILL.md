@@ -65,14 +65,19 @@ Phase 2 (Screenshots & artifacts) is DONE if ALL of:
   - sync-artifacts/{TestClassName}/spec.md exists
   - Screenshots are up-to-date (re-pull from emulator after Phase 1 re-run)
 
-Phase 3 (iOS test & sync) is DONE if:
+Phase 3 (Resource parity) is DONE if:
+  - sync-artifacts/{TestClassName}/resource_map.md exists
+  - sync-artifacts/{TestClassName}/resource_parity.md exists
+  - Re-run resource parity check to verify no new mismatches
+
+Phase 4 (iOS test & sync) is DONE if:
   - iOS test file exists in ~/Documents/WaonderApps/waonder-ios/WaonderUITests/
     (search for {TestClassName}.swift)
   - Re-run the iOS test on the simulator to verify it still passes
-  - If the test FAILS, stay in Phase 3 to fix it
+  - If the test FAILS, stay in Phase 4 to fix it
   - If the test PASSES, re-capture iOS screenshots
 
-Phase 4 (Visual parity) — ALWAYS re-run this phase, even if a previous
+Phase 5 (Visual parity) — ALWAYS re-run this phase, even if a previous
   parity_report.md exists. Visual parity must be verified against the
   CURRENT state of both apps.
 ```
@@ -83,8 +88,9 @@ Phase 4 (Visual parity) — ALWAYS re-run this phase, even if a previous
    ```
    Phase 1: SKIP — SignInScreenTest.kt exists, re-run PASSED
    Phase 2: SKIP — spec.md and 6 android screenshots present, re-pulled
-   Phase 3: SKIP — SignInScreenTest.swift exists, re-run PASSED, screenshots re-captured
-   Phase 4: RUN — always re-verify visual parity
+   Phase 3: SKIP — resource_map.md and resource_parity.md exist, re-checked
+   Phase 4: SKIP — SignInScreenTest.swift exists, re-run PASSED, screenshots re-captured
+   Phase 5: RUN — always re-verify visual parity
    ```
 3. Start execution from the first phase that is NOT done.
 4. If all phases through 3 are done, go directly to Phase 4.
@@ -176,7 +182,51 @@ Once the Android test passes, **spawn `mobile-screenshot-artifact-expert` agent*
 >
 > Report: a mapping table of Android path → iOS path → status (exists/missing).
 
-### Phase 3: iOS Test Creation & Feature Sync
+### Phase 3: Resource Parity Audit & Fix
+
+**Goal**: Ensure all Android resources (strings, colors, drawables, dimensions) used by the tested screens have matching iOS equivalents before the iOS test runs.
+
+**Spawn `mobile-resource-parity-expert` agent**:
+
+> Audit resource parity between Android and iOS for the test `{TestClassName}`.
+>
+> **Android feature files involved**: `{list of android feature files from Phase 2 mapping}`
+> **Android repo**: `~/Documents/WaonderApps/waonder-android`
+> **iOS repo**: `~/Documents/WaonderApps/waonder-ios`
+> **Test class name**: `{TestClassName}`
+>
+> Your job:
+> 1. Read each Android feature file and trace ALL resource references:
+>    - `R.string.*` → look up in `strings.xml`
+>    - `R.color.*` → look up in `colors.xml`
+>    - `R.drawable.*` → identify drawable file
+>    - `R.dimen.*` → look up in `dimens.xml`
+>    - Material icons → note SF Symbol equivalents
+>
+> 2. Build a resource map documenting every resource, its value, and which screen uses it.
+>    Save to `~/Documents/WaonderApps/sync-artifacts/{TestClassName}/resource_map.md`
+>
+> 3. Check iOS for each resource:
+>    - Strings: check `waonder/en.lproj/Localizable.strings`
+>    - Colors: check Asset Catalogs and Color extensions
+>    - Drawables: check SF Symbols usage and Asset Catalogs
+>    - Dimensions: check spacing constants
+>
+> 4. **Auto-fix** missing or mismatched resources on iOS:
+>    - Add missing strings to `Localizable.strings`
+>    - Fix mismatched string values
+>    - Flag missing custom assets for manual intervention
+>    - SF Symbol substitution for Material Icons is acceptable
+>
+> 5. Save a parity report to `~/Documents/WaonderApps/sync-artifacts/{TestClassName}/resource_parity.md`
+>
+> Report: total resources traced, matched count, auto-fixed count, remaining issues.
+
+**Wait for the resource parity agent to finish.** If it reports remaining issues that require manual intervention (e.g., custom image assets), log them but continue — the iOS test sync agent will encounter these as visual differences and they'll be caught in Phase 5.
+
+**CRITICAL — Hardcoded String Gate**: If the resource parity agent reports ANY `RESOURCE USAGE ERROR` (hardcoded English strings in iOS Swift source files), these MUST be included in the Phase 4 prompt to the iOS test sync agent as mandatory fixes. The iOS test sync agent MUST replace all hardcoded strings with `String(localized: "key")` calls before the test is considered passing. Do NOT proceed to Phase 5 with hardcoded strings still in iOS feature code — this is a code defect, not a visual parity issue.
+
+### Phase 4: iOS Test Creation & Feature Sync
 
 **Goal**: A passing iOS automation test with matching behavior and visual output.
 
@@ -191,6 +241,7 @@ Once the Android test passes, **spawn `mobile-screenshot-artifact-expert` agent*
    > - Android feature files: `{list of android feature files}`
    > - iOS repo: `~/Documents/WaonderApps/waonder-ios`
    > - File mapping: `{android_to_ios_mapping}`
+   > - Resource parity report: `~/Documents/WaonderApps/sync-artifacts/{TestClassName}/resource_parity.md` — read this first for known resource issues
    >
    > Your job is to make iOS match Android — both functionally AND visually. This involves THREE areas of work:
    >
@@ -227,7 +278,7 @@ Once the Android test passes, **spawn `mobile-screenshot-artifact-expert` agent*
 
 2. **Wait for the iOS sync agent to finish**.
 
-### Phase 4: Visual Parity Verification & Automatic Fix Loop
+### Phase 5: Visual Parity Verification & Automatic Fix Loop
 
 **Goal**: Confirm Android and iOS look the same. If they don't, fix automatically — do NOT just report.
 
@@ -264,13 +315,13 @@ Once the Android test passes, **spawn `mobile-screenshot-artifact-expert` agent*
 4. After all issues have been processed sequentially, re-run the full visual parity verification (spawn `mobile-screenshot-artifact-expert` again).
 5. If previously-unresolved issues remain, try them again — solving other issues first may have unblocked them. Each gets 3 fresh attempts with fresh instrumentation. Process them sequentially again.
 6. Repeat until all issues are resolved or all remaining issues have failed twice (6 total attempts across 2 rounds).
-7. **Final cleanup**: After the entire Phase 4 completes, verify NO `WAONDER-DEBUG-` strings remain in the iOS codebase. If any do, spawn one final instrumentation cleanup agent to remove them.
+7. **Final cleanup**: After the entire Phase 5 completes, verify NO `WAONDER-DEBUG-` strings remain in the iOS codebase. If any do, spawn one final instrumentation cleanup agent to remove them.
 
-**The sync is NOT complete until Phase 4 reports zero issues requiring fix.** If issues remain after the full rotation, report them to the user with the diagnostic files.
+**The sync is NOT complete until Phase 5 reports zero issues requiring fix.** If issues remain after the full rotation, report them to the user with the diagnostic files.
 
 **iOS log capture**: Every sub-agent fixing an iOS issue MUST capture simulator logs during test runs to aid debugging. See the iOS test sync agent for the log capture protocol.
 
-### Phase 5: Final Report
+### Phase 6: Final Report
 
 Generate a sync report summarizing everything:
 
@@ -288,6 +339,12 @@ Generate a sync report summarizing everything:
 - Status: PASS / PARTIAL
 - Steps: {n}
 - Screenshots: {n}
+
+### Resource Parity
+- Resources traced: {n}
+- Matched: {n}
+- Auto-fixed: {n}
+- Manual required: {n}
 
 ### Files Created
 - {list}
@@ -309,14 +366,15 @@ Save to `~/Documents/WaonderApps/sync-artifacts/{TestClassName}/sync_report.md`.
 
 ## Sub-Agent Summary
 
-This skill spawns 4 types of sub-agents:
+This skill spawns 5 types of sub-agents:
 
 | Agent | Spawned In | Purpose |
 |-------|-----------|---------|
 | `mobile-android-test-creator-expert` | Phase 1 | Creates Android test, iterates until green (emulator only) |
-| `mobile-screenshot-artifact-expert` | Phase 2, 4 | Pulls screenshots, organizes artifacts, compares visuals |
-| `mobile-ios-test-sync-expert` | Phase 3, 4 | Creates iOS test + fixes iOS feature code (simulator only). In Phase 4, one instance per visual issue processed SEQUENTIALLY (never parallel) with 3-attempt limit. |
-| `mobile-automation-bug-instrumentation-expert` | Phase 4 | Instruments app with targeted temporary log statements before each fix attempt. Adds max 10 logs per issue at decision points/data boundaries. Cleans up all instrumentation after each issue is resolved. Debug logs never ship. |
+| `mobile-screenshot-artifact-expert` | Phase 2, 5 | Pulls screenshots, organizes artifacts, compares visuals |
+| `mobile-resource-parity-expert` | Phase 3 | Traces all Android resources (strings, colors, drawables, dimensions) used by tested screens, maps them to iOS equivalents, auto-fixes missing/mismatched resources (especially Localizable.strings), and produces a parity report. Runs BEFORE iOS test creation so resources are correct from the start. |
+| `mobile-ios-test-sync-expert` | Phase 4, 5 | Creates iOS test + fixes iOS feature code (simulator only). In Phase 5, one instance per visual issue processed SEQUENTIALLY (never parallel) with 3-attempt limit. |
+| `mobile-automation-bug-instrumentation-expert` | Phase 5 | Instruments app with targeted temporary log statements before each fix attempt. Adds max 10 logs per issue at decision points/data boundaries. Cleans up all instrumentation after each issue is resolved. Debug logs never ship. |
 
 ## Constraints
 
@@ -325,6 +383,7 @@ This skill spawns 4 types of sub-agents:
 - iOS feature code CAN and MUST be modified to match Android behavior AND styling
 - **Visual parity is mandatory** — the sync is incomplete until iOS screenshots match Android (minus unavoidable platform differences)
 - **iOS best practices are sacred** — never violate them when porting. Use @Observable (not init injection for ViewModels), @Environment (not constructor DI), SwiftUI modifiers (not imperative layout), async/await (not callbacks), protocol abstractions (not abstract classes)
+- **String localization is mandatory** — ZERO TOLERANCE for hardcoded user-facing strings in iOS feature code. All text must use `String(localized: "key")` or SwiftUI `Text("key")` localization lookup. Hardcoded English strings in Views are code defects that MUST be caught in Phase 3 (resource parity audit) and fixed in Phase 4 (iOS sync). The sync is NOT complete if hardcoded strings remain.
 - Human approval required before any `git push`
 - Max 10 iterations per platform for test creation/fixing
 - Max 3 attempts per individual visual parity issue before rotating to another issue
