@@ -11,8 +11,14 @@
 # ──────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
-# ── Resolve repo root (4 levels up: <skill>/ → skills/ → <plugin>/ → plugins/ → repo/) ──
-REPO_DIR="$(cd "$(dirname "$0")/../../../.." && pwd)"
+# ── Resolve repo root ──
+# If a path is passed as the first argument, use it (skill invoked against an external repo).
+# Otherwise fall back to 4 levels up from the script (script lives inside the target repo).
+if [ -n "${1:-}" ]; then
+  REPO_DIR="$(cd "$1" && pwd)"
+else
+  REPO_DIR="$(cd "$(dirname "$0")/../../../.." && pwd)"
+fi
 
 MARKETPLACE_FILE="$REPO_DIR/.claude-plugin/marketplace.json"
 if [ ! -f "$MARKETPLACE_FILE" ]; then
@@ -91,13 +97,32 @@ echo "[OK] Updated $KM_FILE"
 IP_FILE="$HOME/.claude/plugins/installed_plugins.json"
 [ ! -f "$IP_FILE" ] && echo '{"version": 2, "plugins": {}}' > "$IP_FILE"
 
-PLUGIN_COUNT=$(python3 -c "import json; print(len(json.load(open('$MARKETPLACE_FILE')).get('plugins', [])))")
+LOCAL_PLUGINS=$(python3 -c "
+import json
+marketplace = json.load(open('$MARKETPLACE_FILE'))
+for p in marketplace.get('plugins', []):
+    src = p.get('source', '')
+    if isinstance(src, str):
+        print(p['name'] + '|' + src)
+")
+PLUGIN_COUNT=$(echo "$LOCAL_PLUGINS" | grep -c '.' || true)
 
-for i in $(seq 0 $((PLUGIN_COUNT - 1))); do
-  PLUGIN_NAME=$(python3 -c "import json; print(json.load(open('$MARKETPLACE_FILE'))['plugins'][$i]['name'])")
-  PLUGIN_SOURCE=$(python3 -c "import json; print(json.load(open('$MARKETPLACE_FILE'))['plugins'][$i]['source'])")
-  VERSION=$(python3 -c "import json; print(json.load(open('$MARKETPLACE_FILE'))['plugins'][$i]['version'])")
+while IFS='|' read -r PLUGIN_NAME PLUGIN_SOURCE; do
+  [ -z "$PLUGIN_NAME" ] && continue
   PLUGIN_DIR="$(cd "$REPO_DIR/$PLUGIN_SOURCE" && pwd)"
+  PLUGIN_JSON="$PLUGIN_DIR/.claude-plugin/plugin.json"
+  VERSION=$(python3 -c "
+import json, sys
+m = '$MARKETPLACE_FILE'
+p_name = '$PLUGIN_NAME'
+marketplace = json.load(open(m))
+entry = next((p for p in marketplace['plugins'] if p['name'] == p_name), {})
+v = entry.get('version')
+if not v:
+    pj = '$PLUGIN_JSON'
+    v = json.load(open(pj)).get('version', '0.0.0')
+print(v)
+")
   PLUGIN_KEY="${PLUGIN_NAME}@${MARKETPLACE_NAME}"
 
   echo ""
@@ -150,7 +175,7 @@ with open('$IP_FILE', 'w') as f:
     ln -s "$PLUGIN_DIR" "$CACHE_VERSION_DIR"
     echo "   [OK] Created cache symlink: $CACHE_VERSION_DIR -> $PLUGIN_DIR"
   fi
-done
+done <<< "$LOCAL_PLUGINS"
 
 echo ""
 echo "── Setup complete ──"
